@@ -1,0 +1,33 @@
+---
+title: "Final Project of Intro to Data Science"
+author: "Mofei Li"
+date: "December 20, 2014"
+output: html_document
+---
+```{r load packages and data}
+library(dplyr)
+library(ggplot2)
+setwd("/Users/apple/Documents/Open_Course/UDACITY/Intro to Data Science/Final Project/")
+file <- "./improved-dataset/turnstile_weather_v2.csv"
+turnstile <- tbl_df(read.csv(file, header=TRUE))
+
+```
+
+```{r data manipulation}
+# Convert some variables into factors
+turnstile$day_week <- factor(turnstile$day_week)
+turnstile$hour <- factor(turnstile$hour)
+turnstile$fog <- factor(turnstile$fog)
+turnstile$rain <- factor(turnstile$rain)
+turnstile$weekday <- factor(turnstile$weekday)
+turnstile$conds <- factor(turnstile$conds)
+str(turnstile)
+# Standardize the numerical variables we are going to use in the regression model later
+turnstile[c("precipi", "pressurei", "tempi", "wspdi")] <- 
+    scale(turnstile[c("precipi", "pressurei", "tempi", "wspdi")])
+```
+
+
+```{r}
+
+```
