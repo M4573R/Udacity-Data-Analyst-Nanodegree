@@ -1,20 +1,24 @@
 ---
 title: "Final Project of Intro to Data Science"
 author: "Mofei Li"
-date: "December 20, 2014"
+date: "December 22, 2014"
 output: html_document
 ---
 ```{r load packages and data}
 library(dplyr)
 library(ggplot2)
+library(GGally)
+library(MASS)
+library(moments)
 setwd("/Users/apple/Documents/Open_Course/UDACITY/Intro to Data Science/Final Project/")
 file <- "./improved-dataset/turnstile_weather_v2.csv"
-turnstile <- tbl_df(read.csv(file, header=TRUE))
+data <- tbl_df(read.csv(file, header=TRUE))
 
 ```
 
 ```{r data manipulation}
 # Convert some variables into factors
+turnstile <- data
 turnstile$day_week <- factor(turnstile$day_week)
 turnstile$hour <- factor(turnstile$hour)
 turnstile$fog <- factor(turnstile$fog)
@@ -23,11 +27,74 @@ turnstile$weekday <- factor(turnstile$weekday)
 turnstile$conds <- factor(turnstile$conds)
 str(turnstile)
 # Standardize the numerical variables we are going to use in the regression model later
-turnstile[c("precipi", "pressurei", "tempi", "wspdi")] <- 
-    scale(turnstile[c("precipi", "pressurei", "tempi", "wspdi")])
+turnstile[c("ENTRIESn", "EXITSn_hourly", "precipi", "pressurei", "tempi", "wspdi")] <- 
+    scale(turnstile[c("ENTRIESn", "EXITSn_hourly", "precipi", "pressurei", "tempi", "wspdi")])
 ```
 
+```{r Correlations of predictors}
+turnstile_num <- data[c("EXITSn_hourly", "hour", "day_week", "latitude", "longitude",
+                        "weekday", "rain", "fog", "precipi", "pressurei", "wspdi",
+                        "meanprecipi", "meanpressurei", "meantempi", "meanwspdi",
+                        "weather_lat", "weather_lon")]
+corr.of.turnstile <- cor(turnstile_num)
+```
+The correlation matrix of all the numerical predictors (including some categorical predictors) above shows many strong correlations. Some of them are pretty easy to understand from the meaning of the variables, such as `meanprecipi` is the daily average of `precipi`. The others are less obvious but I find very intereting, such as the correlation of `meanwspdi` and `longitude` is over 0.5.
 
-```{r}
+```{r pairwise scatterplot}
+turnstile_num <- 
+    turnstile_num %>%
+    select(EXITSn_hourly, hour, day_week, latitude, longitude, rain, fog, precipi, pressurei,
+           wspdi)
 
+ggpairs(turnstile_num)
+```
+
+```{r fitting the model}
+knitr::opts_chunk$set(cache=TRUE)
+
+model0 <- lm(ENTRIESn_hourly ~ ENTRIESn + EXITSn_hourly + precipi + hour + tempi + 
+                 UNIT + day_week + pressurei + fog + conds + pressurei,
+             data=turnstile)
+bbox <- boxcox(ENTRIESn_hourly + 1 ~ ENTRIESn + EXITSn_hourly + precipi + hour + tempi + 
+                 UNIT + day_week + pressurei + fog + conds + pressurei,
+             data=turnstile, lambda = seq(0.2, 0.3, by =0.001))
+lambda <- bbox$x
+llik <- bbox$y
+bc <- cbind(lambda, llik)
+bc[order(-llik),][1,] #0.225
+summary(model0)
+
+model1 <- lm((ENTRIESn_hourly+1)^(0.225) ~ 
+                 ENTRIESn + EXITSn_hourly + precipi + hour + tempi + 
+                 UNIT + day_week + pressurei + fog + conds + pressurei,
+             data=turnstile)
+```
+
+```{r analysis of residual}
+model0.residual <- data.frame(residuals = rstandard(model0),
+                             y_val = turnstile$ENTRIESn_hourly)
+
+ggplot(aes(x=y_val,y=residuals), data=model0.residual) + 
+    geom_point() + 
+    ggtitle('Plot of Residuals') + 
+    ylab("Standardized Residuals") + 
+    xlab("Entries_hourly") + 
+    geom_hline(aes(yintercept=0, colour="#990000"))
+
+
+model1.residual <- data.frame(residuals = rstandard(model1),
+                             y_val = turnstile$ENTRIESn_hourly)
+
+par(mfrow=c(2,1))
+qplot(model1$residuals, binwidth=0.1)
+qqnorm(model1$residuals)
+qqline(model1$residuals)
+skewness(model1$residuals)
+qplot(model0$residuals, binwidth=0.1)
+ggplot(aes(x=y_val,y=residuals), data=model1.residual) + 
+    geom_point() + 
+    ggtitle('Plot of Residuals') + 
+    ylab("Standardized Residuals") + 
+    xlab("Entries_hourly") + 
+    geom_hline(aes(yintercept=0, colour="#990000"))
 ```
