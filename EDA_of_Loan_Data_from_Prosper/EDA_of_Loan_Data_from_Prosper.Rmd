@@ -31,7 +31,7 @@ Here are the names of all the 81 variables:
 names(loan)
 ```
 
-Let's take a glimpse of all the variables. Since I set `stringsAsFactor=FALSE` when loads the data. All the varibles are either numeric or string for now. But to make more sense of the analysis, I may change the class of some variables later.
+Let's take a glimpse of all the variables. Since I set `stringsAsFactor=FALSE` when load the data. All the varibles are either numeric or string for now. But to make more sense of the analysis, I may change the class of some variables later.
 ```{r summary, echo=FALSE}
 str(loan)
 ```
@@ -56,12 +56,12 @@ loan$IsBorrowerHomeowner <- factor(loan$IsBorrowerHomeowner)
 ```
 
 **First, let's find out how much they earn annually.**  
-```{r IncomeRange, cache=TRUE, echo=FALSE}
+```{r IncomeRange, cache=TRUE, echo=TRUE}
 ggplot(aes(x=IncomeRange), data=loan) + 
     geom_bar(binwidth = 500, fill=c('#068EDB', rep('#05DBF2', 6), '#068EDB')) +
     stat_bin(geom="text", binwidth = 500, aes(label=..count.., vjust=-0.5, hjust=0.5)) +
     ylim(0, 35000) + 
-    theme(axis.text.x  = element_text(angle=45, vjust=0.5)) + 
+    theme(axis.text.x  = element_text(angle=90, vjust=0.5)) + 
     labs(title='The Income Range of the Borrowers')
 ```
 
