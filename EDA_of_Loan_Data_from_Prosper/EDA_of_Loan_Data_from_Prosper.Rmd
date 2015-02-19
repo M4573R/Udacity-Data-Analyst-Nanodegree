@@ -145,7 +145,7 @@ summary(loan$DebtToIncomeRatio)
 
 I see a huge gap between the 3rd quartile and the maximum and a simple calculation tells me they are `r round(max(loan$DebtToIncomeRatio, na.rm=T)/quantile(loan$DebtToIncomeRatio, 0.75, na.rm=T))` times away! **Let's draw the histogram to get a better understanding of DIT(Debt to Income) Ratio.**  
 
-```{r DebtToIncomeRatio hist all, echo=TRUE, cache=TRUE, warning=FALSE}
+```{r DebtToIncomeRatio hist all, echo=TRUE, cache=TRUE, warning=FALSE, message=FALSE}
 ggplot(aes(x=DebtToIncomeRatio), data=loan) + 
     geom_histogram(fill='#05DBF2', color='black') +
     labs(title=expression(paste("Debt to Income Ratio")), 
@@ -271,9 +271,12 @@ with(subset(loan, Investors==1),
 ```
 
 No, there're not many friend-to-friend loan going on through Prosper.
+
+
 ------
 
-**Let's take a look at which part of the country the borrowers live.**  
+**Let's take a look at which part of the country the borrowers live.** 
+
 ```{r BorrowerState Data Prep, cache=TRUE, echo=FALSE}
 loan$BorrowerAPR <- factor(loan$BorrowerAPR)
 loan$BorrowerState <- factor(loan$BorrowerState)
@@ -374,7 +377,7 @@ map_tot_borrower <-
                   geographyConfig=list(
                       popupTemplate="#!function(geo, data) {
                       return '<div class=\"hoverinfo\"><strong>'+
-                      data.State+'<br>' + data.n+
+                      data.BorrowerState+'<br>' + data.n+
                       '</strong></div>';}!#"))
 
 print(map_tot_borrower)
@@ -627,7 +630,7 @@ When we look at the proper rate vs income range separately for three states: CA,
 
 **Whether the business of Prosper has been growing year by year?**  
 
-```{r year by year Data Prep, echo=FALSE, cache=TRUE}
+```{r year by year Data Prep, echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
 loan <- loan %>% 
     mutate(ListingCreationYear = year(ListingCreationDate)) 
 
@@ -708,9 +711,11 @@ kable(state_income,
 On the list of average monthly income by state, the top 5 are Connecticut of $7394.697/month, Watshington D.C of $6822.252/month, New Jersey $6807.020/month, Maryland $6516.032/month and Virginia $6508.574/month. Interestingly, all of them are on the East Coast. But keep in mind, those are average income of the borrowers of Prosper not a census result.
 
 ------
+
 # Final Plots and Summary
 
 ### Plot One
+
 ```{r Plot_One, results='asis', echo=FALSE, cache=TRUE, fig.width = 10, fig.height = 6}
 q1 <- ggplot(aes(x=DebtToIncomeRatio, y=LenderYield, 
                  color=ProsperRating..Alpha.), 
@@ -743,17 +748,23 @@ Just as we have seen in the previous section, higher risk is usually associated 
 ####<font color='#068EDB'>The Listing to Population Ratio (per 10,000 capita) for each State</font>
 ```{r Plot_Two_density, results='asis', echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
 # Add the popluation info into the bos ([bo]rrowers' [s]tates) data frame
-population_by_state <- 
-    tbl_df(read.csv('US_population_by_state.csv',
-                    header=TRUE, stringsAsFactors=FALSE))
-population_by_state <- population_by_state %>%
-    mutate(Population = gsub(",", "", 
-                             Population_estimate),
-           State_abb = state.abb[match(State,state.name)]) %>%
-    select(State, State_abb, Population) 
-population_by_state$State_abb[population_by_state$State 
-                              == "District of Columbia"] <- "DC"
+#population_by_state <- 
+#    tbl_df(read.csv('US_population_by_state.csv',
+#                    header=TRUE, stringsAsFactors=FALSE))
+#population_by_state <- population_by_state %>%
+#    mutate(Population = gsub(",", "", 
+#                             Population_estimate),
+#           State_abb = state.abb[match(State,state.name)]) %>%
+#    select(State, State_abb, Population) 
+#population_by_state$State_abb[population_by_state$State 
+#                              == "District of Columbia"] <- "DC"
+#write.csv(population_by_state, 'US_population_by_state_clean.csv', 
+#          row.names = FALSE)
 
+#Read in the clean population data
+population_by_state <- 
+    tbl_df(read.csv('US_population_by_state_clean.csv',
+                    header=TRUE, stringsAsFactors=FALSE))
 bos <- bos%>%
     left_join(population_by_state, 
               by = c("BorrowerState" = "State_abb"))
@@ -769,7 +780,7 @@ map_borrower_rate <- ichoropleth.o(
     geographyConfig =
         list(popupTemplate="#!function(geo, data) {
              return '<div class=\"hoverinfo\"><strong>'+
-             data.State+
+             data.BorrowerState+
              '<br>' + data.Borrower_Percent+
              '</strong></div>';}!#"))
 
@@ -780,7 +791,7 @@ print(map_borrower_rate)
 ![Invester_Map](https://www.prosper.com/media/150620/lender_map_michigan_2013-4-10_498x315.jpg)
 
 ### Description Two
-In the bivariate analysis section, I found that California, Texas, New York and Florida are the top 4 on the list of state with big borrower market. Meanwhile, I found a map(shown above) shows the states are open to the investors on the Prosper website. I was wondering if whether a state opens to the investors relates to the size of borrower market, so I put the online map into the analysis for comparison. However, I didn't see a clear relation between those two maps. The fact that California, Texas, New York and Florida -- the four states with biggest borrower market -- are also the top 4 states with largest population makes me thinking if the listing to population ratio tells a different story from the absolute number of the listings. So I pulled the data of estimated population of each state for July 2014 from Wikipedia and then got a new graphic (the third map). Comparing the map of listing to population ratio to the one shows whether a state opens to the investors, it seems that those states are open to investors usually have higher listing to population ratio than those that don't.
+In the bivariate analysis section, I found that California, Texas, New York and Florida are the top 4 on the list of state with big borrower market. Meanwhile, I found a map(shown above) shows the states are open to the investors on the Prosper website. I was wondering if whether a state opens to the investors or not relates to the size of borrower market, so I put the online map into the analysis for comparison purpose. However, I didn't see a clear relation between those two maps. The fact that California, Texas, New York and Florida -- the four states with biggest borrower market -- are also the top 4 states with largest population makes me thinking if the listing to population ratio tells a different story from the absolute number of the listings. So I pulled the data of estimated population of each state for July 2014 from Wikipedia and then got a new map. Comparing the map of listing to population ratio to the one shows whether a state opens to the investors, it seems that those states are open to investors usually have higher listing to population ratio than those that don't.
 
 ------
 
