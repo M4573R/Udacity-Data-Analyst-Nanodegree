@@ -1,0 +1,84 @@
+---
+title: "EDA of Enron Financial Data"
+author: "Mofei Li"
+date: "March 12, 2015"
+output: html_document
+---
+
+```{r knitr global settings, echo=FALSE}
+library(knitr)
+
+opts_chunk$set(cache=TRUE, echo=TRUE, eval=TRUE, tidy=TRUE,
+               message=FALSE, warning=FALSE)
+```
+
+```{r load the data and packages}
+library(dplyr)
+library(ggplot2)
+
+### Set working directory
+setwd("~/Documents/Udacity-Projects/P4")
+
+### Read the dataset and remove the first column (which is row number)
+fp_data <- tbl_df(read.csv("./data/final_project_dataset.csv", 
+                           header = TRUE, stringsAsFactors = FALSE) )[ ,-1]
+
+### Make "name" as the first column for easy identification
+fp_data <- fp_data[c("name", names(fp_data)[names(fp_data) != "name"])] 
+
+row.names(fp_data) <- fp_data$name
+```
+
+There are `r nrow(fp_data)` persons in the dataset with `r ncol(fp_data)` variables.
+
+```{r data glimpse}
+glimpse(fp_data) 
+NumberMissingV <- function(data){
+    # Compute the number of missing values in a data vector
+    # Args:
+    #   data: a data vector, usually one column of a data frame
+    # Return:
+    #   numeric, the number of missing values
+    sum(is.na(data))
+}
+
+NumberMissingDF <- function(data, by_col = TRUE){
+    # Compute the number of missing values of each column of a data frame
+    # Args:
+    #   data: dataframe
+    #   by_col: whether to summrise by column, "TRUE" by default
+    # Return:
+    #   a data frame of one column -- # of missing values and variable name as row name
+    if(by_col){
+        data <- data.frame(apply(data, 2, NumberMissingV))
+        data$variable <- row.names(data)
+        row.names(data) <- 1:nrow(data)
+        colnames(data) <- c("Number_of_Missing_Value", "Variable")
+    }else{ #summarise by rows
+        data <- data.frame(apply(data, 1, NumberMissingV))
+        data$subject <- row.names(data)
+        row.names(data) <- 1:nrow(data)
+        colnames(data) <- c("Number_of_Missing_Value", "Subject")
+        }
+    data <- data[,c(2,1)]
+    
+    return(data)
+}
+
+col.missing.df <- NumberMissingDF(fp_data)
+row.missing.df <- NumberMissingDF(fp_data, by_col = FALSE)
+
+### Persons with lots of Missing Value
+high.missing.list <- row.missing.df$Subject[row.missing.df$Number_of_Missing_Value >= 15]
+
+poi.list <- fp_data$name[fp_data$poi == "True"]
+
+### No person with lots of Missing Value is poi
+#table(high.missing.list %in% poi.list)
+
+high.missing.df <- fp_data %>%
+    filter(name %in% high.missing.list)
+
+
+kable(col.missing.df, align = c('l', 'c'))
+```
