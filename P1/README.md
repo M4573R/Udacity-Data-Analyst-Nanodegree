@@ -6,6 +6,6 @@ Data Science Skills Applied:
 
  - Data wrangling
  - Linear regression and statistical tests
- - Effective visualization
+ - Effective visualization  
 
- [Click here](http://nbviewer.ipython.org/github/lmf90409/Udacity-Data-Analyst-Nanodegree/blob/master/P1/Analyzing%20the%20NYC%20Subway%20Dataset.ipynb) to see ipython notebote of analysis in nbviewer
+ [Click here](http://nbviewer.ipython.org/github/lmf90409/Udacity-Data-Analyst-Nanodegree/blob/master/P1/Analyzing%20the%20NYC%20Subway%20Dataset.ipynb) to see ipynb of the analysis in nbviewer
