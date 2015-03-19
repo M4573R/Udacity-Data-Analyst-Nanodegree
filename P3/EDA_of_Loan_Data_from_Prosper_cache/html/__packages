@@ -1,0 +1,10 @@
+base
+ggplot2
+rMaps
+dplyr
+gmodels
+knitr
+lubridate
+RColorBrewer
+GGally
+reshape

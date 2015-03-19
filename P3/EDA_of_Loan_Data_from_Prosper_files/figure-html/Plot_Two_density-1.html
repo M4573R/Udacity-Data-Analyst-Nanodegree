@@ -1,0 +1,505 @@
+<!doctype HTML>
+<meta charset = 'utf-8'>
+<html>
+  <head>
+    
+    <script src='http://d3js.org/d3.v3.min.js' type='text/javascript'></script>
+    <script src='http://d3js.org/topojson.v1.min.js' type='text/javascript'></script>
+    <script src='http://datamaps.github.io/scripts/datamaps.all.min.js' type='text/javascript'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js' type='text/javascript'></script>
+    
+    <style>
+    .rChart {
+      display: block;
+      margin-left: auto; 
+      margin-right: auto;
+      width: 800px;
+      height: 400px;
+    }  
+    </style>
+    
+  </head>
+  <body >
+    
+    <div id = 'chart5da9258955af' class = 'rChart datamaps'></div>    
+    <script id='popup-template' type='text/x-handlebars-template'>
+    
+</script>
+<script>
+  var chartParams = {
+ "dom": "chart5da9258955af",
+"width":    800,
+"height":    400,
+"scope": "usa",
+"fills": {
+ "[0.599,2.5]": "#F1EEF6",
+"(2.5,3.1]": "#BDC9E1",
+"(3.1,3.46]": "#74A9CF",
+"(3.46,4.13]": "#2B8CBE",
+"(4.13,5.8]": "#045A8D" 
+},
+"legend": true,
+"labels": true,
+"geographyConfig": {
+ "popupTemplate": function(geo, data) {
+             return '<div class=\"hoverinfo\"><strong>'+
+             data.State+
+             '<br>' + data.Borrower_Percent+
+             '</strong></div>';} 
+},
+"data": {
+ "AK": {
+ "BorrowerState": [ "AK" ],
+"n": [ 200 ],
+"State": [ "Alaska" ],
+"Population": [ 7.3673e+05 ],
+"Borrower_Percent": [ 2.7147 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"AL": {
+ "BorrowerState": [ "AL" ],
+"n": [ 1679 ],
+"State": [ "Alabama" ],
+"Population": [ 4.8494e+06 ],
+"Borrower_Percent": [ 3.4623 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"AR": {
+ "BorrowerState": [ "AR" ],
+"n": [ 855 ],
+"State": [ "Arkansas" ],
+"Population": [ 2.9664e+06 ],
+"Borrower_Percent": [ 2.8823 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"AZ": {
+ "BorrowerState": [ "AZ" ],
+"n": [ 1901 ],
+"State": [ "Arizona" ],
+"Population": [ 6.7315e+06 ],
+"Borrower_Percent": [  2.824 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"CA": {
+ "BorrowerState": [ "CA" ],
+"n": [ 14717 ],
+"State": [ "California" ],
+"Population": [ 3.8802e+07 ],
+"Borrower_Percent": [ 3.7928 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"CO": {
+ "BorrowerState": [ "CO" ],
+"n": [ 2210 ],
+"State": [ "Colorado" ],
+"Population": [ 5.3559e+06 ],
+"Borrower_Percent": [ 4.1263 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"CT": {
+ "BorrowerState": [ "CT" ],
+"n": [ 1627 ],
+"State": [ "Connecticut" ],
+"Population": [ 3.5967e+06 ],
+"Borrower_Percent": [ 4.5236 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"DC": {
+ "BorrowerState": [ "DC" ],
+"n": [ 382 ],
+"State": [ "District of Columbia" ],
+"Population": [ 6.5889e+05 ],
+"Borrower_Percent": [ 5.7976 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"DE": {
+ "BorrowerState": [ "DE" ],
+"n": [ 300 ],
+"State": [ "Delaware" ],
+"Population": [ 9.3561e+05 ],
+"Borrower_Percent": [ 3.2065 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"FL": {
+ "BorrowerState": [ "FL" ],
+"n": [ 6720 ],
+"State": [ "Florida" ],
+"Population": [ 1.9893e+07 ],
+"Borrower_Percent": [  3.378 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"GA": {
+ "BorrowerState": [ "GA" ],
+"n": [ 5008 ],
+"State": [ "Georgia" ],
+"Population": [ 1.0097e+07 ],
+"Borrower_Percent": [ 4.9597 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"HI": {
+ "BorrowerState": [ "HI" ],
+"n": [ 409 ],
+"State": [ "Hawaii" ],
+"Population": [ 1.4196e+06 ],
+"Borrower_Percent": [ 2.8812 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"IA": {
+ "BorrowerState": [ "IA" ],
+"n": [ 186 ],
+"State": [ "Iowa" ],
+"Population": [ 3.1071e+06 ],
+"Borrower_Percent": [ 0.59862 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"ID": {
+ "BorrowerState": [ "ID" ],
+"n": [ 599 ],
+"State": [ "Idaho" ],
+"Population": [ 1.6345e+06 ],
+"Borrower_Percent": [ 3.6648 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"IL": {
+ "BorrowerState": [ "IL" ],
+"n": [ 5921 ],
+"State": [ "Illinois" ],
+"Population": [ 1.2881e+07 ],
+"Borrower_Percent": [ 4.5968 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"IN": {
+ "BorrowerState": [ "IN" ],
+"n": [ 2078 ],
+"State": [ "Indiana" ],
+"Population": [ 6.5969e+06 ],
+"Borrower_Percent": [   3.15 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"KS": {
+ "BorrowerState": [ "KS" ],
+"n": [ 1062 ],
+"State": [ "Kansas" ],
+"Population": [ 2.904e+06 ],
+"Borrower_Percent": [  3.657 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"KY": {
+ "BorrowerState": [ "KY" ],
+"n": [ 983 ],
+"State": [ "Kentucky" ],
+"Population": [ 4.4135e+06 ],
+"Borrower_Percent": [ 2.2273 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"LA": {
+ "BorrowerState": [ "LA" ],
+"n": [ 954 ],
+"State": [ "Louisiana" ],
+"Population": [ 4.6497e+06 ],
+"Borrower_Percent": [ 2.0518 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"MA": {
+ "BorrowerState": [ "MA" ],
+"n": [ 2242 ],
+"State": [ "Massachusetts" ],
+"Population": [ 6.7454e+06 ],
+"Borrower_Percent": [ 3.3237 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"MD": {
+ "BorrowerState": [ "MD" ],
+"n": [ 2821 ],
+"State": [ "Maryland" ],
+"Population": [ 5.9764e+06 ],
+"Borrower_Percent": [ 4.7202 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"ME": {
+ "BorrowerState": [ "ME" ],
+"n": [ 101 ],
+"State": [ "Maine" ],
+"Population": [ 1.3301e+06 ],
+"Borrower_Percent": [ 0.75935 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"MI": {
+ "BorrowerState": [ "MI" ],
+"n": [ 3593 ],
+"State": [ "Michigan" ],
+"Population": [ 9.9099e+06 ],
+"Borrower_Percent": [ 3.6257 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"MN": {
+ "BorrowerState": [ "MN" ],
+"n": [ 2318 ],
+"State": [ "Minnesota" ],
+"Population": [ 5.4572e+06 ],
+"Borrower_Percent": [ 4.2476 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"MO": {
+ "BorrowerState": [ "MO" ],
+"n": [ 2615 ],
+"State": [ "Missouri" ],
+"Population": [ 6.0636e+06 ],
+"Borrower_Percent": [ 4.3126 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"MS": {
+ "BorrowerState": [ "MS" ],
+"n": [ 787 ],
+"State": [ "Mississippi" ],
+"Population": [ 2.9941e+06 ],
+"Borrower_Percent": [ 2.6285 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"MT": {
+ "BorrowerState": [ "MT" ],
+"n": [ 330 ],
+"State": [ "Montana" ],
+"Population": [ 1.0236e+06 ],
+"Borrower_Percent": [  3.224 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"NC": {
+ "BorrowerState": [ "NC" ],
+"n": [ 3084 ],
+"State": [ "North Carolina" ],
+"Population": [ 9.944e+06 ],
+"Borrower_Percent": [ 3.1014 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"ND": {
+ "BorrowerState": [ "ND" ],
+"n": [ 52 ],
+"State": [ "North Dakota" ],
+"Population": [ 7.3948e+05 ],
+"Borrower_Percent": [ 0.70319 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"NE": {
+ "BorrowerState": [ "NE" ],
+"n": [ 674 ],
+"State": [ "Nebraska" ],
+"Population": [ 1.8815e+06 ],
+"Borrower_Percent": [ 3.5822 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"NH": {
+ "BorrowerState": [ "NH" ],
+"n": [ 551 ],
+"State": [ "New Hampshire" ],
+"Population": [ 1.3268e+06 ],
+"Borrower_Percent": [ 4.1528 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"NJ": {
+ "BorrowerState": [ "NJ" ],
+"n": [ 3097 ],
+"State": [ "New Jersey" ],
+"Population": [ 8.9382e+06 ],
+"Borrower_Percent": [ 3.4649 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"NM": {
+ "BorrowerState": [ "NM" ],
+"n": [ 472 ],
+"State": [ "New Mexico" ],
+"Population": [ 2.0856e+06 ],
+"Borrower_Percent": [ 2.2632 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"NV": {
+ "BorrowerState": [ "NV" ],
+"n": [ 1090 ],
+"State": [ "Nevada" ],
+"Population": [ 2.8391e+06 ],
+"Borrower_Percent": [ 3.8392 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"NY": {
+ "BorrowerState": [ "NY" ],
+"n": [ 6729 ],
+"State": [ "New York" ],
+"Population": [ 1.9746e+07 ],
+"Borrower_Percent": [ 3.4077 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"OH": {
+ "BorrowerState": [ "OH" ],
+"n": [ 4197 ],
+"State": [ "Ohio" ],
+"Population": [ 1.1594e+07 ],
+"Borrower_Percent": [ 3.6199 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"OK": {
+ "BorrowerState": [ "OK" ],
+"n": [ 971 ],
+"State": [ "Oklahoma" ],
+"Population": [ 3.8781e+06 ],
+"Borrower_Percent": [ 2.5038 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"OR": {
+ "BorrowerState": [ "OR" ],
+"n": [ 1817 ],
+"State": [ "Oregon" ],
+"Population": [ 3.9702e+06 ],
+"Borrower_Percent": [ 4.5766 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"PA": {
+ "BorrowerState": [ "PA" ],
+"n": [ 2972 ],
+"State": [ "Pennsylvania" ],
+"Population": [ 1.2787e+07 ],
+"Borrower_Percent": [ 2.3242 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"RI": {
+ "BorrowerState": [ "RI" ],
+"n": [ 435 ],
+"State": [ "Rhode Island" ],
+"Population": [ 1.0552e+06 ],
+"Borrower_Percent": [ 4.1225 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"SC": {
+ "BorrowerState": [ "SC" ],
+"n": [ 1122 ],
+"State": [ "South Carolina" ],
+"Population": [ 4.8325e+06 ],
+"Borrower_Percent": [ 2.3218 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"SD": {
+ "BorrowerState": [ "SD" ],
+"n": [ 189 ],
+"State": [ "South Dakota" ],
+"Population": [ 8.5318e+05 ],
+"Borrower_Percent": [ 2.2153 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"TN": {
+ "BorrowerState": [ "TN" ],
+"n": [ 1737 ],
+"State": [ "Tennessee" ],
+"Population": [ 6.5494e+06 ],
+"Borrower_Percent": [ 2.6522 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"TX": {
+ "BorrowerState": [ "TX" ],
+"n": [ 6842 ],
+"State": [ "Texas" ],
+"Population": [ 2.6957e+07 ],
+"Borrower_Percent": [ 2.5381 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"UT": {
+ "BorrowerState": [ "UT" ],
+"n": [ 877 ],
+"State": [ "Utah" ],
+"Population": [ 2.9429e+06 ],
+"Borrower_Percent": [ 2.9801 ],
+"fillKey": [ "(2.5,3.1]" ] 
+},
+"VA": {
+ "BorrowerState": [ "VA" ],
+"n": [ 3278 ],
+"State": [ "Virginia" ],
+"Population": [ 8.3263e+06 ],
+"Borrower_Percent": [ 3.9369 ],
+"fillKey": [ "(3.46,4.13]" ] 
+},
+"VT": {
+ "BorrowerState": [ "VT" ],
+"n": [ 207 ],
+"State": [ "Vermont" ],
+"Population": [ 6.2656e+05 ],
+"Borrower_Percent": [ 3.3037 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"WA": {
+ "BorrowerState": [ "WA" ],
+"n": [ 3048 ],
+"State": [ "Washington" ],
+"Population": [ 7.0615e+06 ],
+"Borrower_Percent": [ 4.3163 ],
+"fillKey": [ "(4.13,5.8]" ] 
+},
+"WI": {
+ "BorrowerState": [ "WI" ],
+"n": [ 1842 ],
+"State": [ "Wisconsin" ],
+"Population": [ 5.7576e+06 ],
+"Borrower_Percent": [ 3.1993 ],
+"fillKey": [ "(3.1,3.46]" ] 
+},
+"WV": {
+ "BorrowerState": [ "WV" ],
+"n": [ 391 ],
+"State": [ "West Virginia" ],
+"Population": [ 1.8503e+06 ],
+"Borrower_Percent": [ 2.1131 ],
+"fillKey": [ "[0.599,2.5]" ] 
+},
+"WY": {
+ "BorrowerState": [ "WY" ],
+"n": [ 150 ],
+"State": [ "Wyoming" ],
+"Population": [ 5.8415e+05 ],
+"Borrower_Percent": [ 2.5678 ],
+"fillKey": [ "(2.5,3.1]" ] 
+} 
+},
+"id": "chart5da9258955af" 
+}
+  chartParams.element = document.getElementById('chart5da9258955af')
+  
+  
+  var mapchart5da9258955af = new Datamap(chartParams);
+  
+  
+    
+  // draw a bubble map if specified
+  if (chartParams.bubbles) {
+    var bubbles = chartParams.bubbles
+    mapchart5da9258955af.bubbles(bubbles)
+  }
+  
+  if (chartParams.labels){
+    mapchart5da9258955af.labels()
+  }
+  
+  if (chartParams.legend){
+    mapchart5da9258955af.legend()
+  }
+  
+  setProjection = function( element, options ) {
+    var projection, path;
+ 
+      projection = d3.geo.albersUsa()
+        .scale(element.offsetWidth)
+        .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+ 
+    path = d3.geo.path()
+      .projection( projection );
+ 
+    return {path: path, projection: projection};
+  }
+</script>
+
+<style>
+.datamaps {
+  position: relative;
+}
+</style>
+    
+    <script></script>    
+  </body>
+</html>

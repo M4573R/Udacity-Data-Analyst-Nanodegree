@@ -1,0 +1,846 @@
+---
+title: "EDA of Loan Data from Prosper"
+author: "Mofei Li"
+output: html_document
+---
+```{r packages, cache=TRUE, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(rMaps)
+library(dplyr)
+library(gmodels)
+library(knitr)
+library(lubridate)
+library(RColorBrewer)
+library(GGally)
+library(reshape)
+```
+#Abstract
+Prosper is America's first peer-to-peer lending marketplace, with more than 2 million members and over $2,000,000,000 in funded loans. Here we use the data available to the public (last updated on March 11th, 2014) from Prosper, which contains all the listings and loans ever created with 81 variables on each loan/listing, to do some data analysis. As a potential amateur investor, I will explore the borrower market (including the demographic segmentation and beyond) and try to let data tell some 'behind scene' stories about the borrowers, also the performance of Prosper in terms of the volume of listings by year and by area.
+
+#Analysis
+## Overview of Dataset
+```{r Load_the_Data, cache=TRUE, echo=FALSE}
+setwd('~/Documents/Udacity-Projects/P3')
+loan <- tbl_df(read.csv('prosperLoanData.csv', 
+                        header=T, stringsAsFactors=F))
+```
+
+### Browse Data
+This data set contains 113,937 loans with 81 variables on each loan.
+```{r dim, echo=FALSE}
+dim(loan)
+```
+
+Here are the names of all the 81 variables:
+```{r var_names, echo=FALSE}
+names(loan)
+```
+
+Let's take a glimpse of all the variables. Since I set `stringsAsFactor=FALSE` when load the data. All the varibles are either numeric or string for now. But to make more sense of the analysis, I may change the class of some variables later.
+```{r summary, echo=FALSE}
+str(loan)
+```
+
+------
+
+## Exploratory Univariate Analysis
+There's a borrower behind every loan, I'll start with exploring some variables of the characteristics of the borrowers.  
+
+```{r Data Cleaning First Stage, cache=TRUE, echo=FALSE}
+loan$IncomeRange <- factor(loan$IncomeRange, 
+                           levels=c("Not employed", "$0", "$1-24,999", 
+                                    "$25,000-49,999", "$50,000-74,999", 
+                                    "$75,000-99,999", "$100,000+", 
+                                    "Not displayed"))
+
+loan$ProsperRating..Alpha. <- loan$ProsperRating..Alpha. %>%
+    factor(levels = c("AA", "A", "B", "C", "D", "E","HR")) %>%
+    addNA(ifany=T)
+
+loan$ListingCreationDate <- ymd_hms(loan$ListingCreationDate)
+loan$IsBorrowerHomeowner <- factor(loan$IsBorrowerHomeowner)
+```
+
+**First, let's find out how much borrowers earn annually.**  
+```{r IncomeRange, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(aes(x=IncomeRange), data=loan) + 
+    geom_bar(binwidth = 500, 
+             fill=c('#068EDB', rep('#05DBF2', 6), '#068EDB')) +
+    stat_bin(geom="text", binwidth = 500, 
+             aes(label=..count.., vjust=-0.5, hjust=0.5)) +
+    ylim(0, 35000) + 
+    theme(axis.text.x  = element_text(angle=90, vjust=0.5)) + 
+    labs(title='The Income Range of the Borrowers')
+```
+
+The income of most borrowers ranges from \$25,000 - \$74,999. To my surprise, there are 621 borrowers with zero income successfully got the loan. Although it's not clearly stated in the dataset, My guess is here 'the income' means the income from employment rather than from all sources. Maybe exploring more information about those borrowers would make it clearer that why they can get the loan.
+
+------
+
+When browse the website of 'Prosper' as a prospective lender, one feature - high 'Prosper Rating' (usually 'AA' or 'A') - of all listings in 'Featured Loan Listings' caught my eyes, which makes me curious about **what's the 'Prosper Rating' of borrowers in this dataset.**
+
+```{r Prosper Rating, cache=TRUE, echo=FALSE}
+ggplot(aes(x=ProsperRating..Alpha.), data=loan) + 
+    geom_bar(binwidth = 500, 
+             fill=c(rep('#05DBF2', 7), '#068EDB')) +
+    stat_bin(geom="text", binwidth = 500,
+             aes(label=..count.., vjust=-0.5, hjust=0.5)) +
+    ylim(c(0, 31000)) + 
+    labs(title='Prosper Ratings of the Borrowers')
+```
+
+Except for `NA`s, the distribution of the ordinal variable has a bell-like shape. 'C' is the most frequent rating in our data and the highest (AA) and the lowest (HR) rating are less common comparing with other ratings in between. I was surprised to see so many missing values. But it seems that Prosper Rating only applicable for loans originated after July 2009. So taking a glimpse of when were the listings created maybe a reasonable thing to do next.
+
+```{r ListingCreationDate, cache=TRUE, echo=TRUE}
+table(loan$ListingCreationDate < ymd("2009-07-01"),
+      dnn = "Number of Listings Created Prior to 07/01/09")
+
+table(loan$ListingCreationDate < ymd("2009-07-01"),
+      dnn = "Percentage of Listings Created Prior to 07/01/09") /
+    length(loan$ListingCreationDate)
+
+range(loan$ListingCreationDate)
+```
+
+The number of listings prior to 2009-07-01 is 29084, which is exactly the same with the number of missing values in Prosper Rating variable. And the earliest listing was created at `r min(loan$ListingCreationDate)` and the latest one was at `r max(loan$ListingCreationDate)`.
+
+------
+
+Another thing I found in 'Featured Loan Listings' on the website was all listings there were of 3-year long. **Let's see if 3-year is really the most popular choice in terms of the length of the loans.**
+
+```{r Term, cache=TRUE, echo=TRUE, echo=FALSE}
+cat("Frequecy Table for Term of the loans")
+CrossTable(loan$Term) 
+loan$Term <- factor(loan$Term) #For later Analysis
+```
+
+There're only three options for the length of the loan - 1 year, 3 years and 5 years. Only about 1.4% of the borrowers chose 1 year and 21.5% chose 5 years. With 77% of people chose 3 years, it surely is the most popular choice of all.
+
+------
+
+I started my first job about half year ago and the idea of borrowing a loan has never come to me so far. So **I'm curious about when does a person get a loan in terms of the length of their working status.**  
+
+```{r EmploymentStatusDuration, echo=FALSE, cache=TRUE}
+ggplot(aes(x=EmploymentStatusDuration/12), 
+       data=subset(loan, 
+                   EmploymentStatus %in% 
+                       c("Employed", "Full-time", 
+                         "Part-time", "Self-employed"))) + 
+    geom_histogram(binwidth = 1, fill='#05DBF2', color='black') +
+    labs(title='Length of Employment', x='years of employment') +
+    scale_x_continuous(breaks=seq(0, 63, 2))
+```
+
+
+I subset the borrowers with employment status listed as "Employed", "Full-time", "Part-time" and "Self-employed" and get the histogram of the length of employment for them. 
+Using year as the unit of time, there's a very clear descending trend of the number of people who borrow loans with the increase of the length of employment. My guess is the longer one works, the more one earns and therefore more savings. With more saving in the bank, people are less likely to borrow loans.
+
+------
+
+**Next, let's take a look at the distribution of the percentage of a consumer's monthly gross income that goes toward paying debts. **  
+
+```{r DebtToIncomeRatio summary, echo=TRUE, cache=TRUE, warning=FALSE}
+summary(loan$DebtToIncomeRatio)
+```
+
+I see a huge gap between the 3rd quartile and the maximum and a simple calculation tells me they are `r round(max(loan$DebtToIncomeRatio, na.rm=T)/quantile(loan$DebtToIncomeRatio, 0.75, na.rm=T))` times away! **Let's draw the histogram to get a better understanding of DIT(Debt to Income) Ratio.**  
+
+```{r DebtToIncomeRatio hist all, echo=TRUE, cache=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=DebtToIncomeRatio), data=loan) + 
+    geom_histogram(fill='#05DBF2', color='black') +
+    labs(title=expression(paste("Debt to Income Ratio")), 
+         x='Debt / Income')
+
+quantile(loan$DebtToIncomeRatio, 0.99, na.rm=T)
+```
+
+```{r DebtToIncomeRatio hist limited, echo=TRUE, cache=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=DebtToIncomeRatio), 
+       data=subset(loan,DebtToIncomeRatio<=1)) + 
+    geom_histogram(binwidth=0.01, 
+                   fill='#05DBF2', color='black') +
+    labs(title=expression(
+        paste("Debt to Income Ratio (for ",
+              DTI <= 1,")")), 
+         x='Debt / Income')
+```
+
+After limiting the ratio to less or equal to 1, we include more than $99\%$ of the data but get a much finer graphic. The distribution has a bell shape and is right-skewed. And if we call the function `quantile(loan$DebtToIncomeRatio, 0.95, na.rm=T)`, it tells us $95\%$ of the borrowers keep their DTI $\leq 1$. Of course, besides paying the debt people get life to live and it needs money.
+
+------
+
+**Let's see what people borrow money for.**  
+
+```{r Category, echo=FALSE, cache=TRUE, warning=FALSE}
+loan$Category <- factor(loan$ListingCategory..numeric., 
+                        levels=c(1:6,8:20,7,0),
+                        labels=c('Debt Consolidation',
+                                 'Home Improvement', 
+                                 'Business', 
+                                 'Personal Loan', 
+                                 'Student Use', 
+                                 'Auto', 
+                                 'Baby&Adoption',
+                                 'Boat', 
+                                 'Cosmetic Procedure', 
+                                 'Engagement Ring', 
+                                 'Green Loans', 
+                                 'Household Expenses', 
+                                 'Large Purchases', 
+                                 'Medical/Dental', 
+                                 'Motorcycle', 'RV',
+                                 'Taxes', 'Vacation',
+                                 'Wedding Loans', 
+                                 'Other', 
+                                 'Not Available'))
+#Type Conversion - for later use
+loan$ListingCategory..numeric. <- 
+    factor(loan$ListingCategory..numeric.) 
+
+ggplot(aes(x=Category), data=loan) + 
+    geom_bar(binwidth = 500, fill='#05DBF2') +
+    stat_bin(geom="text", binwidth = 500, size = 3,
+             aes(label=..count.., vjust=-0.5, hjust=0.5)) +
+    ylim(c(0, 63000)) + 
+    theme(axis.text.x = element_text(angle=90, vjust=0.5)) +
+    labs(title='The Purpose of the Loans')
+```
+
+Majority of people get the personal loans for 'debt consolidation'. 'Home improvement' and 'Business' are also important purpose for the loans. Another thing I found very interesting is that about the same amount of people got loans for 'student use', 'Vacation' and 'Wedding'. It seems like that education, preparation for getting married and getaway from home are all equally worth investing.  
+
+------
+
+**I want to know if one needs recommendations to successfully receive the loan.**
+```{r Recommendations, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=Recommendations), data=loan) + 
+    geom_histogram(binwidth=1, 
+                   fill='#05DBF2', color='black') +
+    labs(title="Number of Recommendations of 
+         the Borrowers")
+
+table(loan$Recommendations != 0, 
+      dnn = "If the borrower has one or 
+      more recommendations")
+```
+
+The majority of borrowers didn't have a recommendation at all. 
+
+------
+
+Prosper is a peer-to-peer lending business. After learning a few things about the borrowers, I decide to explore some lenders related variables to see **how lenders benefit from investing in loans.**  
+
+```{r LenderYield, echo=TRUE, cache=TRUE, warning=FALSE}
+summary(loan$LenderYield)
+ggplot(aes(x=LenderYield), data=loan) + 
+    geom_histogram(binwidth=0.005, 
+                   fill='#05DBF2', color='black') +
+    scale_x_continuous(breaks=seq(0, 0.5, 0.05)) + 
+    labs(title="The Lender Yield on the Loan")
+
+```
+
+There are `r sum(loan$LenderYield <= 0)` cases that the lenders didn't get any profit and even lost some of their own money. But `r sum(loan$LenderYield <= 0)` out of `r nrow(loan)`, the odd is really low. Most yields range from 0.05 to 0.35. Surprisingly, the highest peak in the graphic is around 0.31, which shows a really rosy picture if one considers about doing the similar investment.
+
+------
+
+**How many lenders usually 'share' the risk the loan together?**
+
+```{r Investors, echo=FALSE, cache=TRUE, warning=FALSE}
+summary(loan$Investors)
+table(loan$Investors==1, dnn = "Only one investor")
+ggplot(aes(x=Investors), data=subset(loan, Investors>1)) + 
+    geom_histogram(binwidth=10, 
+                   fill='#05DBF2', color='black') +
+    labs(title="The Number of Investors Funded the Loan\n 
+         (for loans with more than one investors)")
+```
+
+About 24.4% of loans only has one investor. For the rest of listings, there are multiple investors.
+
+------
+
+## Exploratory Bivariate Analysis
+
+With 24.4% of loans only has one investor, I want to know **if the only lender is usually a friend of the borrower?**
+
+```{r InvestmentFromFriendsCount, echo=FALSE, cache=TRUE, warning=FALSE}
+with(subset(loan, Investors==1), 
+     table(InvestmentFromFriendsCount, 
+           dnn = "if the single investor is 
+           a friend of the borrower"))
+```
+
+No, there're not many friend-to-friend loan going on through Prosper.
+
+
+------
+
+**Let's take a look at which part of the country the borrowers live.** 
+
+```{r BorrowerState Data Prep, cache=TRUE, echo=FALSE}
+loan$BorrowerAPR <- factor(loan$BorrowerAPR)
+loan$BorrowerState <- factor(loan$BorrowerState)
+```
+
+```{r modification of function of rMaps, echo=FALSE}
+ichoropleth.o <- function(x, data, 
+                          pal = "Blues", ncuts = 5, 
+                          animate = NULL, play = F, 
+                          map = "usa", legend = TRUE, 
+                          labels = TRUE, ...){
+    d <- Datamaps$new()
+    fml = lattice::latticeParseFormula(x, data = data)
+    data = transform(data, 
+                     fillKey = cut(fml$left, 
+                                   quantile(fml$left, 
+                                            seq(0, 1, 1/ncuts)), 
+                                   ordered_result = TRUE, 
+                                   include.lowest = TRUE))
+    fillColors = brewer.pal(ncuts, pal)
+    d$set(scope = map, 
+          fills = as.list(setNames(fillColors, 
+                                   levels(data$fillKey))), 
+          legend = legend, labels = labels, ...)
+    if (!is.null(animate)) {
+        range_ = summary(data[[animate]])
+        data = plyr::dlply(data, animate, function(x) {
+            y = toJSONArray2(x, json = F)
+            names(y) = lapply(y, "[[", fml$right.name)
+            return(y)
+        })
+        d$set(bodyattrs = "ng-app ng-controller='rChartsCtrl'")
+        d$addAssets(jshead = "http://cdnjs.cloudflare.com/ajax/
+                    libs/angular.js/1.2.1/angular.min.js")
+        if (play==T){
+            d$setTemplate(
+                chartDiv = 
+                    sprintf("\n        
+                            <div class='container'>\n 
+                            <button ng-click='animateMap()'>
+                            Play</button>\n   
+                            <span ng-bind='year'></span>\n  
+                            <div id='{{chartId}}' 
+                            class='rChart datamaps'>
+                            </div>\n </div>\n        
+                            <script>\n
+                            function rChartsCtrl($scope, $timeout){\n
+                            $scope.year = %s;\n  
+                            $scope.animateMap = function(){\n      
+                            if ($scope.year > %s){\n    
+                            return;\n              }\n    
+                            map{{chartId}}.updateChoropleth(
+                            chartParams.newData[$scope.year]);\n     
+                            $scope.year += 1\n   
+                            $timeout($scope.animateMap, 1000)\n       
+                            }\n          }\n       </script>",
+                            range_[1], range_[6]))
+            }else{
+                d$setTemplate(
+                    chartDiv = 
+                        sprintf("\n <div class='container'>\n        
+                                <input id='slider' type='range' 
+                                min=%s max=%s ng-model='year' 
+                                width=200>\n          
+                                <span ng-bind='year'></span>\n   
+                                <div id='{{chartId}}' 
+                                class='rChart datamaps'></div>\n      
+                                </div>\n        <script>\n
+                                function rChartsCtrl($scope){\n         
+                                $scope.year = %s;\n   
+                                $scope.$watch('year', 
+                                function(newYear){\n        
+                                map{{chartId}}.updateChoropleth(
+                                chartParams.newData[newYear]);\n
+                                })\n 
+                                }\n       </script>", 
+                                range_[1], range_[6], range_[1]))}
+        d$set(newData = data, data = data[[1]])
+    }else{
+        d$set(data = plyr::dlply(data, fml$right.name))
+    }
+    return(d)
+}
+```
+
+```{r Table of BorrowerState, echo=FALSE, cache=TRUE}
+bos <- loan %>% #[bo]rrowers' [s]tates
+    group_by(BorrowerState) %>%
+    summarise(n = n()) %>% 
+    arrange(desc(n))
+```
+
+```{r Borrowers_map, results='asis', echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
+# Map shows the total number of borrowers by State
+map_tot_borrower <- 
+    ichoropleth.o(n ~ BorrowerState, data = bos, 
+                  ncuts = 5, pal = 'PuBu',
+                  geographyConfig=list(
+                      popupTemplate="#!function(geo, data) {
+                      return '<div class=\"hoverinfo\"><strong>'+
+                      data.BorrowerState+'<br>' + data.n+
+                      '</strong></div>';}!#"))
+
+print(map_tot_borrower)
+# The original ichoropleth function would color the 'ND' black since it has the lowest
+# number of borrowers and by default the function doesn't include the lowest point. So 
+# I edited the funtion a little a bit.
+
+kable(bos, col.names = c("State", "Number of borrowers"), 
+             align = rep('c',2))
+```
+
+The number of borrowers of different states varies a lot and California, Texas, New York and Florida are the top 4 on the list of state with big borrower market. While it's hard to take all the states into consideration and especially to visualize the result all together, I will choose CA, TX and NY, the three states with largest amount of borrowers, as representatives for the later geographical analysis.
+
+------
+
+In the previous analysis, I find most borrowers keep their debt to income ratio (DTI) at a reasonable low level (50% of borrowers keep their DTI lower than 0.22 and 95% have their DTI 0.5 or less), however, there are some 'dangerous players' out there decided to use nearly all of their monthly (or even more) income to pay the loan. I want to explore some features of the borrower together with DTI to see if there are some common features within the 'ordinary players' and the 'dangerous players'.  
+Also, Prosper Rate of the borrower is a unique and really important feature that surely of interest of both borrowers and investors. I'd like to see what's the relationship between Prosper Rate and some other features of the listings.  
+To get a overview quickly, I will start with `ggpairs` and dig in deeper for any findings of my interest later on.
+
+```{r ggpiars, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+# Sample 200 listings from the dataset for a quicker but may be not very precise 
+# overview of pair-wise relations with ggpairs function
+loan.s <- sample_n(loan, 200) #[loan] [s]ample
+
+ggpairs(loan.s[ ,c("IncomeRange", 
+                   "IsBorrowerHomeowner", 
+                   "EmploymentStatusDuration", 
+                   "DebtToIncomeRatio")],
+        diag=list(continuous="density", 
+                  discrete="bar"), 
+        axisLabels="none")
+
+ggpairs(loan.s[ ,c("LenderYield",
+                   "ProsperRating..Alpha.",
+                   "Term",
+                   "Recommendations", 
+                   "Investors")],
+        diag=list(continuous="density", 
+                  discrete="bar"), 
+        axisLabels="none")
+```
+
+
+------
+
+
+**Who gives every buck they earn (or even more) to pay back the loan?**
+```{r DebtToIncomeRatio vs IncomeRange, cache=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=DebtToIncomeRatio), data=loan) +
+    geom_density(aes(color = IncomeRange, 
+                     fill  = IncomeRange), 
+                 alpha = 0.5) +
+    facet_wrap(~IncomeRange, ncol=2, 
+               scales = "free")
+
+with(loan, by(DebtToIncomeRatio, IncomeRange, 
+              summary))
+```
+
+According to the information online, the borrower can choose their DIT anywhere between 0 and 10.01. But putting a large portion of (even an amount exceeds) one's income every month to pay back the loan for 1, 3 or even 5 years continuously is extremely hard, if not a mission imporssible. But for borrowers who were not employed when they created the listings, more than a quarter of those people decided to pay the amount of money that is ten times of their monthly income for the loan (even though many of them keep the DTI less than 1 just as those from the other groups)! 90% of people with $1-24,999 annual income keep their DIT lower than 0.9, 90% from $25,000-49,999 group have DTI of 0.47 or lower, $75,000-99,999 with 0.35 or lower and $100,000+ of 0.3 and 0.4 for those income range are not displayed. When comparing other quartiles and mean of DTI throughout all the income groups with numeric label (from $1-24,999 to $100,000+), we see the similar descending trend.  
+Interestingly, 2.55 is the limit of DTI for the borrowers with income of $75,000-99,999, which is so much lower than that of any other group. Maybe we can conclude that borrowers with this range of income are more stable and less likely to risk, at least financially. Besides $75,000-99,999 group, $25,000-49,999 group is the only other group didn't push their DTI limit to 10.01, but still as high as 7.9. For all the other groups, at least some people within each group decided to borrow the amount of money that requires them to give back about their 10-month income for monthly payment! It's surprising to see there is no data for the zero income group at first, but after a second thought I understand that technically everyone in this group have DTI as infinite! So Prosper put all their DTI as null. 
+
+**Does Higher Risk Really Mean Higher Return?**
+```{r prosper rate vs yield, cache=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=ProsperRating..Alpha., y=LenderYield), 
+       data=loan) +
+    geom_boxplot(aes(fill = ProsperRating..Alpha.)) +
+    guides(fill = guide_legend(title = "ProsperRating"))
+
+with(loan, by(LenderYield, 
+              ProsperRating..Alpha., 
+              summary))
+```
+
+I create a new variable here called `YearsSinceFirstCreditLine`, which show the duration from the time of `FirstRecordedCreditLine` to the date the dataset last updated (03/01/2014) for each borrower. **I want to know if person with longer history of credit record has higher `ProsperRating`.**
+
+```{r prosper rate vs first credit line, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+loan$FirstRecordedCreditLine <- 
+    ymd_hms(loan$FirstRecordedCreditLine)
+cut.date <- mdy("03/11/2014")
+loan$YearsSinceFirstCreditLine <- 
+    as.numeric((cut.date -loan$FirstRecordedCreditLine)/365)
+ggplot(aes(x=YearsSinceFirstCreditLine), data=loan) +
+    geom_density(aes(color = ProsperRating..Alpha., 
+                     fill = ProsperRating..Alpha.), 
+                 alpha = 0.5) +
+    facet_wrap(~ProsperRating..Alpha., ncol=2)
+```
+
+For Credit Score, average age of open credit lines is a key credit-influencing factors. So I was expecting to see the similar effects of `FirstRecordedCreditLine`(The date the first credit line was opened) on `ProsperRating`. To my surprise, the length of time since the borrower opened the first credit line makes no difference on the what `ProsperRating` he/she can get. The conditional distributions of `FirstRecordedCreditLine` are almost identical one another.
+
+
+------
+
+
+If `FirstRecordedCreditLine` is not a key factor of `ProsperRating`, let's take California, Texas and New York as examples to see if there is a geographic difference of `ProsperRating` among the three states.
+
+```{r Data Prep for three states, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+loan_3_states <- loan %>% #subset the loan data for only CA, TX and NY
+    filter(BorrowerState %in% c("CA", "TX", "NY")) %>%
+    mutate(BorrowerState = factor(BorrowerState, 
+                                  levels=c("CA", "TX", "NY")))
+```
+
+```{r prosper rate in different states, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=BorrowerState, fill = ProsperRating..Alpha.), 
+       data=filter(loan_3_states, 
+                   !is.na(as.character(ProsperRating..Alpha.)))) +
+    geom_bar(position="fill") +
+    guides(fill = guide_legend(title = "ProsperRating")) +
+    ylab(label = "Percentage")
+
+PR_State_table <- with(loan_3_states, 
+                       by(as.character(ProsperRating..Alpha.), 
+                          BorrowerState, table, useNA="no"))
+print("The Percentage of Prosper Rates in California")
+prop.table(PR_State_table$CA)
+print("The Percentage of Prosper Rates in Texas")
+prop.table(PR_State_table$TX)
+print("The Percentage of Prosper Rates in New York")
+prop.table(PR_State_table$NY)
+```
+
+From the stacked bar chart and the following percentage information in detail, there is no significant difference of `ProsperRating` of borrowers live in CA, TX and NY. But a statistical test would help us understand to difference (if there is any) better.
+
+```{r IncomeRange vs ProsperRating, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+ggplot(aes(x=IncomeRange, fill = ProsperRating..Alpha.), 
+       data=filter(loan, 
+                   !is.na(as.character(
+                       ProsperRating..Alpha.)))) +
+    geom_bar(position="fill") +
+    theme(axis.text.x  = element_text(angle=90, vjust=0.5)) + 
+    guides(fill = guide_legend(title = "Prosper Rate")) +
+    ylab(label = "Percentage") + 
+    ggtitle("Prosper Rate for Borrowers with 
+            Different Income Range")
+
+#Reorder the level of IncomeRange for displaying
+loan$IncomeRange_re <- loan$IncomeRange %>%
+    factor(levels=c("$0", "Not employed", 
+                    "$1-24,999", "$25,000-49,999", 
+                    "$50,000-74,999",  
+                    "$75,000-99,999", 
+                    "$100,000+", 
+                     "Not displayed"))
+                              
+ggplot(aes(x=IncomeRange_re, 
+           fill = ProsperRating..Alpha.), 
+       data=filter(loan, 
+                   !is.na(as.character(
+                       ProsperRating..Alpha.)))) +
+    geom_bar(position="fill") +
+    theme(axis.text.x = 
+              element_text(angle=90, vjust=0.5)) + 
+    guides(fill = guide_legend(title = "Prosper Rate")) +
+    ylab(label = "Percentage") + 
+    ggtitle("Prosper Rate for Borrowers with 
+            Different Income Range (Reordered)")
+```
+
+After changing the order of "Not employed" and "$0", a very interesting step-wise graphic shows up. We can claim that Borrowers of higher income range tend to have better Prosper Rate, however, borrowers who were not employed when they send out the loan request have higher Prosper Rate than those who had zero income.
+
+## Exploratory Multivariate Analysis
+```{r multiplot function, echo=FALSE, cache=TRUE}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, 
+                      file, cols=1, layout=NULL) {
+  require(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols*ceiling(numPlots/cols)),
+                     ncol = cols, 
+                     nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+    } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = 
+                              grid.layout(nrow(layout), 
+                                          ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, 
+                                      arr.ind = TRUE))
+
+      print(plots[[i]], 
+            vp = viewport(layout.pos.row = matchidx$row,
+                          layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+```{r IncomeRange n States vs ProsperRating, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE}
+plot1 <- ggplot(aes(x=IncomeRange, 
+                    fill=ProsperRating..Alpha.), 
+                data=filter(loan_3_states, 
+                            !is.na(as.character(
+                                ProsperRating..Alpha.)))) +
+    geom_bar(position='fill') +
+    theme(axis.text.x  = element_text(angle=90, 
+                                      vjust=0.5)) + 
+    facet_wrap(~BorrowerState, ncol=3) +
+    labs(y = "Percentage")
+
+plot2 <- ggplot(aes(x=factor(1), fill=IncomeRange), 
+                data=filter(loan_3_states, 
+                            !is.na(as.character(
+                                ProsperRating..Alpha.)))) +
+    geom_bar(position='fill') +
+    facet_wrap(~BorrowerState, ncol=3) + 
+    coord_polar(theta = "y") + 
+    scale_fill_brewer() +
+    labs(x = "BorrowerState", y = "IncomeRange")
+
+plots = list(plot1, plot2)
+layout <- matrix(c(rep(1,6), rep(2,3)), 
+                 nrow = 3, 
+                 byrow = TRUE)
+multiplot(plotlist = plots, layout = layout)
+```
+
+When we look at the proper rate vs income range separately for three states: CA, TX and NY, the only obvious difference among the three states and with the nationwise data lies in the no income ($0) group. Half of the borrowers in CA without income were of the rate HR and half D, while all of the no income borrowers in NY of rate E (the average rate of CA from the same group) and TX's no income borrowers held a much higher rate of B. The pie charts tell us that California has more high-end borrowers (from $100,000+ group) comparing with the other two. While the state of New York has higher portion of borrowers of $1-24,999 and $25,000-49,999 income group.
+
+
+------
+
+**Whether the business of Prosper has been growing year by year?**  
+
+```{r year by year Data Prep, echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
+loan <- loan %>% 
+    mutate(ListingCreationYear = year(ListingCreationDate)) 
+
+by_state_year <- loan %>%
+    group_by(BorrowerState, ListingCreationYear)
+
+listing_num <- by_state_year %>%
+    summarise(count = n()) %>%
+    filter(as.character(BorrowerState) != "")
+```
+
+
+```{r year by year, echo=FALSE, cache=TRUE, fig.width = 8, fig.height = 12}
+q.plot1 <- ggplot(aes(x=ListingCreationYear, y=count), 
+             data=filter(listing_num, 
+                         ListingCreationYear!=2014)) +
+    geom_line(color = "#F41D93") + 
+    geom_point() + 
+    labs(x="Creation Year", y="Number of Listings", 
+         title="The Listings Created 
+         from 2006 to 2013 by State") + 
+    theme(axis.text.x = element_text(angle=45, vjust=0.5)) + 
+    facet_wrap(~ BorrowerState, ncol=6, scales = "free_y")
+
+
+q.plot2 <- ggplot(aes(x=factor(ListingCreationYear)), 
+                  data=filter(loan, ListingCreationYear > 2005, 
+                              ListingCreationYear < 2014)) + 
+    geom_bar(fill="#05DBF2") +
+    stat_bin(geom="text", binwidth = 500, 
+             aes(label=..count.., vjust=-0.5, hjust=0.5)) + 
+    ylim(c(0, 38000)) + 
+    labs(x="Creation Year", y="Number of Listings", 
+         title="Total Number of Listings Created")
+
+q.plots <- list(q.plot1, q.plot2)
+layout <- matrix(c(rep(1,6), rep(2,3)), 
+                 nrow = 3, 
+                 byrow = TRUE)
+multiplot(plotlist = q.plots, layout = layout)
+```
+
+From 2006 to 2007, the number of listings created almost doubled. But the number dropped a little in the year of 2008 and decreased dramatically in the following year - 2009. My guess is that the global financial crisis was the principal culprit. After 2009, the business started to recover steadily and by the year of 2011 the business got back to the size before the global financial crisis in terms of the number of listings created per year. And the following 2012 and 2013, the business bloomed really well.  
+
+Seeing from the small multiples, the trend of the listings created each year of most states are similar to the overall trend as I explained in the last paragraph. Interestingly, it seems that the borrower markets were shut down completely after 2008 in Iowa, Maine and North Dakota in despite of the growing trend of listings created from 2006 to 2008. Also, the borrower market didn't start until 2007 in District of Columbia, 2008 in Nevada and Rhode Island and 2009 for South Dakota.
+
+------
+
+```{r state_income map, results='asis', echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
+state_income <- loan %>%
+    group_by(BorrowerState) %>%
+    summarise(Income_mean = mean(StatedMonthlyIncome, 
+                                 na.rm = TRUE)) %>%
+    arrange(desc(Income_mean))
+
+# Map shows the average monthly income of borrowers by State
+map_avg_income <- 
+    ichoropleth.o(Income_mean ~ BorrowerState, 
+                  data = state_income, 
+                  ncuts = 5, pal = 'PuBu',
+                  geographyConfig=
+                      list(popupTemplate="#!function(geo, data){
+                           return '<div class=\"hoverinfo\"><strong>'+
+                           data.BorrowerState+
+                           '<br>' + data.Income_mean+
+                           '</strong></div>';}!#"))
+ 
+print(map_avg_income)
+```
+
+```{r state_income table, echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
+kable(state_income, 
+      col.names = c("State", 
+                    "Average Monthly Income of borrowers"), 
+      align = rep('c',2))
+```
+
+On the list of average monthly income by state, the top 5 are Connecticut of $7394.697/month, Watshington D.C of $6822.252/month, New Jersey $6807.020/month, Maryland $6516.032/month and Virginia $6508.574/month. Interestingly, all of them are on the East Coast. But keep in mind, those are average income of the borrowers of Prosper not a census result.
+
+------
+
+# Final Plots and Summary
+
+### Plot One
+
+```{r Plot_One, results='asis', echo=FALSE, cache=TRUE, fig.width = 10, fig.height = 6}
+q1 <- ggplot(aes(x=DebtToIncomeRatio, y=LenderYield, 
+                 color=ProsperRating..Alpha.), 
+       data=filter(loan, DebtToIncomeRatio <= 1, 
+                   !is.na(as.character(
+                       ProsperRating..Alpha.)))) +
+    geom_point() + 
+    scale_y_log10() +
+    guides(fill = guide_legend(title = "Prosper Rate")) +
+    ggtitle("Lender Yield (log10) vs Debt to Income Ratio 
+            and Prosper Rate")
+
+my_grob <- grid::grobTree(
+    grid::textGrob("For Listings with ProsperRating 
+                   available and DTI Ratio <= 1", 
+                   x=0.2,  y=0.1, hjust=0, 
+                   gp=grid::gpar(col="black", fontsize=12)))
+
+q1 + annotation_custom(my_grob)
+```
+
+### Description One  
+
+Just as we have seen in the previous section, higher risk is usually associated with higher return. Also, although most borrowers keep their debt to income ratio low, but those with worse Prosper Rating are more likely to put higher debt to income ratio listing up. That's why we see an upper triangular shape with the cluster of most points.
+
+------
+
+### Plot Two
+
+####<font color='#068EDB'>The Listing to Population Ratio (per 10,000 capita) for each State</font>
+```{r Plot_Two_density, results='asis', echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE}
+# Add the popluation info into the bos ([bo]rrowers' [s]tates) data frame
+#population_by_state <- 
+#    tbl_df(read.csv('US_population_by_state.csv',
+#                    header=TRUE, stringsAsFactors=FALSE))
+#population_by_state <- population_by_state %>%
+#    mutate(Population = gsub(",", "", 
+#                             Population_estimate),
+#           State_abb = state.abb[match(State,state.name)]) %>%
+#    select(State, State_abb, Population) 
+#population_by_state$State_abb[population_by_state$State 
+#                              == "District of Columbia"] <- "DC"
+#write.csv(population_by_state, 'US_population_by_state_clean.csv', 
+#          row.names = FALSE)
+
+#Read in the clean population data
+population_by_state <- 
+    tbl_df(read.csv('US_population_by_state_clean.csv',
+                    header=TRUE, stringsAsFactors=FALSE))
+bos <- bos%>%
+    left_join(population_by_state, 
+              by = c("BorrowerState" = "State_abb"))
+bos$Population <- as.numeric(bos$Population)
+bos <- bos%>%
+    mutate(Borrower_Percent = n/Population * 10000)
+
+# Map shows the Borrower Rate per State
+map_borrower_rate <- ichoropleth.o(
+    Borrower_Percent ~ BorrowerState, 
+    data = subset(bos, !is.na(bos$Borrower_Percent)), 
+    ncuts = 5, pal = 'PuBu',
+    geographyConfig =
+        list(popupTemplate="#!function(geo, data) {
+             return '<div class=\"hoverinfo\"><strong>'+
+             data.BorrowerState+
+             '<br>' + data.Borrower_Percent+
+             '</strong></div>';}!#"))
+
+print(map_borrower_rate)
+```
+
+####<font color='#068EDB'>States are Open to Investors on Prosper: (from [Prosper Website](https://www.prosper.com/help/investing/#gettingStarted))</font>
+![Invester_Map](https://www.prosper.com/media/150620/lender_map_michigan_2013-4-10_498x315.jpg)
+
+### Description Two
+In the bivariate analysis section, I found that California, Texas, New York and Florida are the top 4 on the list of state with big borrower market. Meanwhile, I found a map(shown above) shows the states are open to the investors on the Prosper website. I was wondering if whether a state opens to the investors or not relates to the size of borrower market, so I put the online map into the analysis for comparison purpose. However, I didn't see a clear relation between those two maps. The fact that California, Texas, New York and Florida -- the four states with biggest borrower market -- are also the top 4 states with largest population makes me thinking if the listing to population ratio tells a different story from the absolute number of the listings. So I pulled the data of estimated population of each state for July 2014 from Wikipedia and then got a new map. Comparing the map of listing to population ratio to the one shows whether a state opens to the investors, it seems that those states are open to investors usually have higher listing to population ratio than those that don't.
+
+------
+
+### Plot Three
+```{r Plot Three, echo=FALSE, cache=TRUE, fig.width=8, fig.height=16}
+ggplot(aes(x=Category), 
+       data = subset(loan, EmploymentStatus %in%
+                         c("Full-time", "Part-time", 
+                           "Employed", "Self-employed"))) + 
+    geom_bar(fill='#5F88D9') + 
+    theme(axis.text.x = element_text(angle=90, vjust=0.5)) +
+    labs(title = "Why the borrowers need to the loan 
+         (among those who work)?",
+         y = "", x = "") +
+    facet_wrap( ~ EmploymentStatus, ncol=1, scales = "free")
+```
+
+### Description Three
+In the univariate analysis part, we took a look at the length of employment for those who had a job. To further the analysis, I decided to explore why they borrow the loan for different types of employees, namely `Full-time`, `Part-time`, `Self-employed` and `Employed`, seperately.  
+
+Although there are so many differences for the four bar plots above, the first thing drew my attention was the huge difference of the data that not available. In the part-time group, if we take `NA` as an independent category, it is the highest of all. And `NA` is also the second largest in the full-time group. While in the self-employed group, `NA` is still the third largest category but relatively small comparing with the top two - Debt Consolidation and Business and for the employed group there are almost no `NA` at all! We can almost surely that the missing value (or `NA` values) among the four employment group are not random but informative missing! It would be an interesting research topic to explore of social science and/or psychological science. Secondly, we see Debt Consolidation are the dominant reasons of all four group regardless of those `NA`s. Next, business is the second biggest reason for the self-employed borrowers - borrowing money to help growing one's own business sounds important and reasonable, and student use for the part-time workers. I remember when I was in graduate school, the income from my part-time job (TA) mostly went to school or study use. Another interesting finding is comparing to the other three groups those part-time worker & borrowers borrow money for less kinds of intentional usages -- such as loan for babys or boats are totally out of their consideration.             
+
+------
+
+# Reflection
+Using ggplot, rMaps and some other packages makes R such a powerful visualization tool. While it's easy to get a graphic of any kind, it's not easy to get a good and informative graphic with reasonable type, scale, legend etc.  
+
+Since I have never been a borrower or a investor of a loan, it took me a lot of time just to understand the meaning of all the variables in the list of 81. But the good thing about the Prosper dataset is I was able to find detailed information for both the borrower side and the lender side from their website. With better understanding of how Prosper works, I even started to think about being an investor in the future when I have extra money to invest. I guess that is also the biggest takeaway for me for doing the project, I feel like that I'm now armed with the knowledge and confidence to explore data, even for those in some fields that I don't quite familiar with.
+
+To achieve the perfect looking I was after, I changed the `ichoropleth` function in `rMaps` package a little bit and defined a customized version `ichoropleth.o`. I was really excited that I understood the drill of the function and was able to customize it to meet my own expectation.  
+
+For further enriching the analysis, I would like a build a regression model using the available variables to predict the Prosper Rating for the future borrowers. As the models of credit score are the core of the Credit Score Companies and how big the business is for those companies, I want to explore myself using the great tool I learned in this course.
+
+One last thing I want to mention but doesn't really show up in this analysis part is that when I pulled the population by state data from Wikipedia, google spreadsheet helped a lot! `IMPORTHTML` gives people an elegant and easy way to export tables and/or list from the webpage.
+
+### Reference
+ - rCharts with DataMaps: http://rcharts.io/viewer/?6735051#.VLrFkmREVFK
+ - Tips for rMaps and rCharts: http://daisukeichikawa.blogspot.com/2014/03/tips-for-rmaps-and-rcharts.html
+ - Prosper: How it works: https://www.prosper.com/welcome/how-it-works/
+ - Prosper Ratings: https://www.prosper.com/invest/how-to-invest/prosper-ratings/
+ - Example 9.17: (much) better pairs plots：http://www.r-bloggers.com/example-9-17-much-better-pairs-plots/
+  - What Is in a Credit Score?: https://www.creditkarma.com/article/credit-score-factors
+  - MORE DESCRIPTIVE STATISTICS: http://ww2.coastal.edu/kingw/statistics/R-tutorials/descriptive.html
+  - Multiple graphs on one page: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+  - Beautiful plotting in R: A ggplot2 cheatsheet: http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/
+  - List of U.S. states and territories by population: http://en.wikipedia.org/wiki/List_of_U.S._states_and_territories_by_population
+  
+### Reproducibility
+```{r Reproducibility, cache=TRUE, echo=TRUE}
+sessionInfo()
+```
+

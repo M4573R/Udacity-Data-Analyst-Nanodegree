@@ -1,0 +1,357 @@
+<!doctype HTML>
+<meta charset = 'utf-8'>
+<html>
+  <head>
+    
+    <script src='http://d3js.org/d3.v3.min.js' type='text/javascript'></script>
+    <script src='http://d3js.org/topojson.v1.min.js' type='text/javascript'></script>
+    <script src='http://datamaps.github.io/scripts/datamaps.all.min.js' type='text/javascript'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js' type='text/javascript'></script>
+    
+    <style>
+    .rChart {
+      display: block;
+      margin-left: auto; 
+      margin-right: auto;
+      width: 800px;
+      height: 400px;
+    }  
+    </style>
+    
+  </head>
+  <body >
+    
+    <div id = 'chart5da9f842f5' class = 'rChart datamaps'></div>    
+    <script id='popup-template' type='text/x-handlebars-template'>
+    
+</script>
+<script>
+  var chartParams = {
+ "dom": "chart5da9f842f5",
+"width":    800,
+"height":    400,
+"scope": "usa",
+"fills": {
+ "[3.28e+03,4.8e+03]": "#F1EEF6",
+"(4.8e+03,5e+03]": "#BDC9E1",
+"(5e+03,5.42e+03]": "#74A9CF",
+"(5.42e+03,5.88e+03]": "#2B8CBE",
+"(5.88e+03,7.39e+03]": "#045A8D" 
+},
+"legend": true,
+"labels": true,
+"geographyConfig": {
+ "popupTemplate": function(geo, data){
+                           return '<div class=\"hoverinfo\"><strong>'+
+                           data.BorrowerState+
+                           '<br>' + data.Income_mean+
+                           '</strong></div>';} 
+},
+"data": {
+ "": {
+ "BorrowerState": [ "" ],
+"Income_mean": [ 4766.3 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"AK": {
+ "BorrowerState": [ "AK" ],
+"Income_mean": [ 5880.6 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"AL": {
+ "BorrowerState": [ "AL" ],
+"Income_mean": [ 4759.9 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"AR": {
+ "BorrowerState": [ "AR" ],
+"Income_mean": [ 4851.9 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"AZ": {
+ "BorrowerState": [ "AZ" ],
+"Income_mean": [   5347 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"CA": {
+ "BorrowerState": [ "CA" ],
+"Income_mean": [ 6184.8 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"CO": {
+ "BorrowerState": [ "CO" ],
+"Income_mean": [ 5647.5 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"CT": {
+ "BorrowerState": [ "CT" ],
+"Income_mean": [ 7394.7 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"DC": {
+ "BorrowerState": [ "DC" ],
+"Income_mean": [ 6822.3 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"DE": {
+ "BorrowerState": [ "DE" ],
+"Income_mean": [ 5754.3 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"FL": {
+ "BorrowerState": [ "FL" ],
+"Income_mean": [ 5399.2 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"GA": {
+ "BorrowerState": [ "GA" ],
+"Income_mean": [ 5460.8 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"HI": {
+ "BorrowerState": [ "HI" ],
+"Income_mean": [ 6221.9 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"IA": {
+ "BorrowerState": [ "IA" ],
+"Income_mean": [ 3714.4 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"ID": {
+ "BorrowerState": [ "ID" ],
+"Income_mean": [ 4182.1 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"IL": {
+ "BorrowerState": [ "IL" ],
+"Income_mean": [ 5590.8 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"IN": {
+ "BorrowerState": [ "IN" ],
+"Income_mean": [ 5094.9 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"KS": {
+ "BorrowerState": [ "KS" ],
+"Income_mean": [ 5148.7 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"KY": {
+ "BorrowerState": [ "KY" ],
+"Income_mean": [ 4929.4 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"LA": {
+ "BorrowerState": [ "LA" ],
+"Income_mean": [ 5274.9 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"MA": {
+ "BorrowerState": [ "MA" ],
+"Income_mean": [ 6190.2 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"MD": {
+ "BorrowerState": [ "MD" ],
+"Income_mean": [   6516 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"ME": {
+ "BorrowerState": [ "ME" ],
+"Income_mean": [ 3635.3 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"MI": {
+ "BorrowerState": [ "MI" ],
+"Income_mean": [ 4932.2 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"MN": {
+ "BorrowerState": [ "MN" ],
+"Income_mean": [ 4912.9 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"MO": {
+ "BorrowerState": [ "MO" ],
+"Income_mean": [ 4710.9 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"MS": {
+ "BorrowerState": [ "MS" ],
+"Income_mean": [ 4923.6 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"MT": {
+ "BorrowerState": [ "MT" ],
+"Income_mean": [   4235 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"NC": {
+ "BorrowerState": [ "NC" ],
+"Income_mean": [ 5425.3 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"ND": {
+ "BorrowerState": [ "ND" ],
+"Income_mean": [   3280 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"NE": {
+ "BorrowerState": [ "NE" ],
+"Income_mean": [ 4796.6 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"NH": {
+ "BorrowerState": [ "NH" ],
+"Income_mean": [ 5855.4 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"NJ": {
+ "BorrowerState": [ "NJ" ],
+"Income_mean": [   6807 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"NM": {
+ "BorrowerState": [ "NM" ],
+"Income_mean": [ 5545.6 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"NV": {
+ "BorrowerState": [ "NV" ],
+"Income_mean": [ 5589.2 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"NY": {
+ "BorrowerState": [ "NY" ],
+"Income_mean": [ 6225.9 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"OH": {
+ "BorrowerState": [ "OH" ],
+"Income_mean": [ 4964.9 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"OK": {
+ "BorrowerState": [ "OK" ],
+"Income_mean": [   4931 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"OR": {
+ "BorrowerState": [ "OR" ],
+"Income_mean": [ 5662.3 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"PA": {
+ "BorrowerState": [ "PA" ],
+"Income_mean": [ 5415.8 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"RI": {
+ "BorrowerState": [ "RI" ],
+"Income_mean": [ 5533.8 ],
+"fillKey": [ "(5.42e+03,5.88e+03]" ] 
+},
+"SC": {
+ "BorrowerState": [ "SC" ],
+"Income_mean": [ 5230.9 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"SD": {
+ "BorrowerState": [ "SD" ],
+"Income_mean": [ 4323.2 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"TN": {
+ "BorrowerState": [ "TN" ],
+"Income_mean": [ 5051.2 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"TX": {
+ "BorrowerState": [ "TX" ],
+"Income_mean": [ 6134.5 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"UT": {
+ "BorrowerState": [ "UT" ],
+"Income_mean": [ 4747.8 ],
+"fillKey": [ "[3.28e+03,4.8e+03]" ] 
+},
+"VA": {
+ "BorrowerState": [ "VA" ],
+"Income_mean": [ 6508.6 ],
+"fillKey": [ "(5.88e+03,7.39e+03]" ] 
+},
+"VT": {
+ "BorrowerState": [ "VT" ],
+"Income_mean": [ 4817.7 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"WA": {
+ "BorrowerState": [ "WA" ],
+"Income_mean": [ 5379.5 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+},
+"WI": {
+ "BorrowerState": [ "WI" ],
+"Income_mean": [ 4920.9 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"WV": {
+ "BorrowerState": [ "WV" ],
+"Income_mean": [ 4971.7 ],
+"fillKey": [ "(4.8e+03,5e+03]" ] 
+},
+"WY": {
+ "BorrowerState": [ "WY" ],
+"Income_mean": [ 5300.5 ],
+"fillKey": [ "(5e+03,5.42e+03]" ] 
+} 
+},
+"id": "chart5da9f842f5" 
+}
+  chartParams.element = document.getElementById('chart5da9f842f5')
+  
+  
+  var mapchart5da9f842f5 = new Datamap(chartParams);
+  
+  
+    
+  // draw a bubble map if specified
+  if (chartParams.bubbles) {
+    var bubbles = chartParams.bubbles
+    mapchart5da9f842f5.bubbles(bubbles)
+  }
+  
+  if (chartParams.labels){
+    mapchart5da9f842f5.labels()
+  }
+  
+  if (chartParams.legend){
+    mapchart5da9f842f5.legend()
+  }
+  
+  setProjection = function( element, options ) {
+    var projection, path;
+ 
+      projection = d3.geo.albersUsa()
+        .scale(element.offsetWidth)
+        .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+ 
+    path = d3.geo.path()
+      .projection( projection );
+ 
+    return {path: path, projection: projection};
+  }
+</script>
+
+<style>
+.datamaps {
+  position: relative;
+}
+</style>
+    
+    <script></script>    
+  </body>
+</html>
