@@ -26,28 +26,28 @@ I added four new features based on the existing features:
  - '**email_exists**': indicator of whether one person has a valid 'email_address'  
  
 
-     variable                   score 
----  ------------------------  -------
-1    exercised_stock_options    24.72 
-2    total_stock_value          24.40 
-3    fraction_to_poi            22.98 
-4    bonus                      22.07 
-5    salary                     16.54 
-6    restricted_stock           12.12 
-7    long_term_incentive        11.32 
-8    deferred_income            11.26 
-9    expenses                   9.41  
-10   total_payments             9.24  
-11   loan_advances              7.49  
-12   shared_receipt_with_poi    7.20  
-13   shared_poi_per_email       6.96  
-14   email_exists               5.35  
-15   other                      4.62  
-16   director_fees              2.02  
-17   fraction_from_poi          1.84  
-18   to_messages                1.35  
-19   from_messages              0.15  
-20   deferral_payments          0.09  
+|    | variable                  | score |
+|--- | :------------------------ | :-------:|
+|1    |exercised_stock_options    |24.72 |
+|2    |total_stock_value          |24.40 |
+|3    |fraction_to_poi            |22.98 |
+|4    |bonus                      |22.07 |
+|5    |salary                     |16.54 |
+|6    |restricted_stock           |12.12 |
+|7    |long_term_incentive        |11.32 |
+|8    |deferred_income            |11.26 |
+|9    |expenses                   |9.41  |
+|10   |total_payments             |9.24  |
+|11   |loan_advances              |7.49  |
+|12   |shared_receipt_with_poi    |7.20  |
+|13   |shared_poi_per_email       |6.96  |
+|14   |email_exists               |5.35  |
+|15   |other                      |4.62  |
+|16   |director_fees              |2.02  |
+|17   |fraction_from_poi          |1.84  |
+|18   |to_messages                |1.35  |
+|19   |from_messages              |0.15  |
+|20   |deferral_payments          |0.09  |
 
 Then using the `SelectKBest` function in `sklearn.feature_selection` module, I got the highest 20 features and their scores. 'fraction_to_poi' ranks the 3th, 'shared_poi_per_email', 'email_exists' and 'fraction_from_poi' in the 13th, 14th and 17th place, respectively.
 
