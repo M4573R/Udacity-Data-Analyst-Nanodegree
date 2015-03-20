@@ -118,12 +118,12 @@ clf = Pipeline(steps=[
  I tried different number of features ranging from 5 to 10 and the model with 8 features had the best performance.  
 
 
-Classifier                Accuracy    Precision    Recall     F1       F2   
------------------------  ----------  -----------  --------  -------  -------
-GaussianNB                 0.846        0.454      0.365     0.405    0.380 
-RandomForestClassifier     0.856        0.484      0.169     0.250    0.194 
-LogisticRegression         0.792        0.330      0.542     0.410    0.480 
-SVC                        0.751        0.326      0.693     0.443    0.566 
+|Classifier             |   Accuracy    |   Precision  |    Recall   |     F1     |   F2   |
+|----------------------- | :----------: | :-----------: | :--------: | :-------: | :-------:|
+|GaussianNB               |  0.846    |    0.454   |   0.365   |  0.405  |  0.380 |
+|RandomForestClassifier    | 0.856    |    0.484    |  0.169   |  0.250  |  0.194 |
+|LogisticRegression         |0.792    |    0.330    |  0.542   |  0.410  |  0.480 |
+|SVC                       | 0.751    |    0.326    |  0.693   |  0.443  |  0.566 |
 
 ###<font color='#068EDB'>Thoughts on the Final Model and How I got there</font>
 I held out 20% of the data as test set and put 80% into training set. Since the classe of labels are unbalanced -- 18 poi and 126 non-poi after removing "TOTAL" and "THE TRAVEL AGENCY IN THE PARK", I used stratified sampling method `StratifiedShuffleSplit` to make sure there are both of the classes in the training and test set.  
@@ -150,13 +150,11 @@ lr_cla = Pipeline(steps=[
                                           random_state = 42, class_weight = 'auto'))
 ])
 ```
-
-
-LogisticRegression                     Accuracy    Precision    Recall     F1       F2   
-------------------------------------  ----------  -----------  --------  -------  -------
-Not tuned (lr_org)                      0.850        0.367      0.170     0.233    0.191 
-Tuned (lr_tn) [FINAL]                   0.789        0.325      0.541     0.406    0.477 
-Tuned w/ auto class_weight (lr_cla)     0.666        0.274      0.911     0.421    0.621 
+|           LogisticRegression      |   Accuracy    |   Precision  |    Recall   |     F1     |   F2   |
+|---------------------------------- | :----------: | :-----------: | :--------: | :-------: | :-------:|
+|Not tuned (lr_org)                 | 0.850       | 0.367   |   0.170  |   0.233 |   0.191 | 
+|Tuned (lr_tn) [FINAL]              | 0.789       | 0.325   |   0.541  |   0.406 |   0.477 |
+|Tuned w/ auto class_weight (lr_cla)|     0.666   |     0.274 |     0.911  |   0.421 |   0.621 |
 
 
 
