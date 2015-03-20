@@ -14,7 +14,7 @@ In this project, I tried four supervised methods -- **Gaussian Naive Bayes**, **
 ###<font color='#068EDB'>Features and Outliers</font>
 
 ####<font color=#4A79D9'>Remove Outliers</font>
-![](Questions_for_Scaled_Project_files/figure-html/plots of outliers-1.png) 
+![](https://raw.githubusercontent.com/lmf90409/Udacity-Data-Analyst-Nanodegree/master/P4/plots%20of%20outliers-1.png) 
 
 I removed two subjects from the dataset -- 'TOTAL' and 'THE TRAVEL AGENCY IN THE PARK'. 'TOTAL' is a spreadsheet quirk that can be easily detected using the point plot "salary" vs "bonus" (the blue point). After removing 'TOTAL', I expected all the other subjects in the dataset are qualified individuals, however, I found 'THE TRAVEL AGENCY IN THE PARK', which I don't have more information to explain why it was in the dataset per se, but removed it anyway since it's more like a group rather than an individual.
 
