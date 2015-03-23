@@ -376,8 +376,8 @@ map_tot_borrower <-
                   ncuts = 5, pal = 'PuBu',
                   geographyConfig=list(
                       popupTemplate="#!function(geo, data) {
-                      return '<div class=\"hoverinfo\"><strong>'+
-                      data.BorrowerState+'<br>' + data.n+
+                      return '<div class=\"hoverinfo\"><strong>'
+                      +data.BorrowerState+'<br>' + data.n+
                       '</strong></div>';}!#"))
 
 print(map_tot_borrower)

@@ -21,13 +21,13 @@
   </head>
   <body >
     
-    <div id = 'chart5da9128603a8' class = 'rChart datamaps'></div>    
+    <div id = 'chart129321ab78' class = 'rChart datamaps'></div>    
     <script id='popup-template' type='text/x-handlebars-template'>
     
 </script>
 <script>
   var chartParams = {
- "dom": "chart5da9128603a8",
+ "dom": "chart129321ab78",
 "width":    800,
 "height":    400,
 "scope": "usa",
@@ -42,8 +42,8 @@
 "labels": true,
 "geographyConfig": {
  "popupTemplate": function(geo, data) {
-                      return '<div class=\"hoverinfo\"><strong>'+
-                      data.State+'<br>' + data.n+
+                      return '<div class=\"hoverinfo\"><strong>'
+                      +data.BorrowerState+'<br>' + data.n+
                       '</strong></div>';} 
 },
 "data": {
@@ -308,27 +308,27 @@
 "fillKey": [ "[52,395]" ] 
 } 
 },
-"id": "chart5da9128603a8" 
+"id": "chart129321ab78" 
 }
-  chartParams.element = document.getElementById('chart5da9128603a8')
+  chartParams.element = document.getElementById('chart129321ab78')
   
   
-  var mapchart5da9128603a8 = new Datamap(chartParams);
+  var mapchart129321ab78 = new Datamap(chartParams);
   
   
     
   // draw a bubble map if specified
   if (chartParams.bubbles) {
     var bubbles = chartParams.bubbles
-    mapchart5da9128603a8.bubbles(bubbles)
+    mapchart129321ab78.bubbles(bubbles)
   }
   
   if (chartParams.labels){
-    mapchart5da9128603a8.labels()
+    mapchart129321ab78.labels()
   }
   
   if (chartParams.legend){
-    mapchart5da9128603a8.legend()
+    mapchart129321ab78.legend()
   }
   
   setProjection = function( element, options ) {
