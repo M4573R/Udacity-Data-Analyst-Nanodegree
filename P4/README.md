@@ -14,7 +14,7 @@ In this project, I tried four supervised methods -- **Gaussian Naive Bayes**, **
 ###<font color='#068EDB'>Features and Outliers</font>
 
 ####<font color=#4A79D9'>Remove Outliers</font>
-![](Questions_for_Scaled_Project_files/figure-html/plots of outliers-1.png) 
+![](https://raw.githubusercontent.com/lmf90409/Udacity-Data-Analyst-Nanodegree/master/P4/plots%20of%20outliers-1.png) 
 
 I removed two subjects from the dataset -- 'TOTAL' and 'THE TRAVEL AGENCY IN THE PARK'. 'TOTAL' is a spreadsheet quirk that can be easily detected using the point plot "salary" vs "bonus" (the blue point). After removing 'TOTAL', I expected all the other subjects in the dataset are qualified individuals, however, I found 'THE TRAVEL AGENCY IN THE PARK', which I don't have more information to explain why it was in the dataset per se, but removed it anyway since it's more like a group rather than an individual.
 
@@ -26,28 +26,28 @@ I added four new features based on the existing features:
  - '**email_exists**': indicator of whether one person has a valid 'email_address'  
  
 
-     variable                   score 
----  ------------------------  -------
-1    exercised_stock_options    24.72 
-2    total_stock_value          24.40 
-3    fraction_to_poi            22.98 
-4    bonus                      22.07 
-5    salary                     16.54 
-6    restricted_stock           12.12 
-7    long_term_incentive        11.32 
-8    deferred_income            11.26 
-9    expenses                   9.41  
-10   total_payments             9.24  
-11   loan_advances              7.49  
-12   shared_receipt_with_poi    7.20  
-13   shared_poi_per_email       6.96  
-14   email_exists               5.35  
-15   other                      4.62  
-16   director_fees              2.02  
-17   fraction_from_poi          1.84  
-18   to_messages                1.35  
-19   from_messages              0.15  
-20   deferral_payments          0.09  
+|    | variable                  | score |
+|--- | :------------------------ | :-------:|
+|1    |exercised_stock_options    |24.72 |
+|2    |total_stock_value          |24.40 |
+|3    |fraction_to_poi            |22.98 |
+|4    |bonus                      |22.07 |
+|5    |salary                     |16.54 |
+|6    |restricted_stock           |12.12 |
+|7    |long_term_incentive        |11.32 |
+|8    |deferred_income            |11.26 |
+|9    |expenses                   |9.41  |
+|10   |total_payments             |9.24  |
+|11   |loan_advances              |7.49  |
+|12   |shared_receipt_with_poi    |7.20  |
+|13   |shared_poi_per_email       |6.96  |
+|14   |email_exists               |5.35  |
+|15   |other                      |4.62  |
+|16   |director_fees              |2.02  |
+|17   |fraction_from_poi          |1.84  |
+|18   |to_messages                |1.35  |
+|19   |from_messages              |0.15  |
+|20   |deferral_payments          |0.09  |
 
 Then using the `SelectKBest` function in `sklearn.feature_selection` module, I got the highest 20 features and their scores. 'fraction_to_poi' ranks the 3th, 'shared_poi_per_email', 'email_exists' and 'fraction_from_poi' in the 13th, 14th and 17th place, respectively.
 
@@ -118,12 +118,12 @@ clf = Pipeline(steps=[
  I tried different number of features ranging from 5 to 10 and the model with 8 features had the best performance.  
 
 
-Classifier                Accuracy    Precision    Recall     F1       F2   
------------------------  ----------  -----------  --------  -------  -------
-GaussianNB                 0.846        0.454      0.365     0.405    0.380 
-RandomForestClassifier     0.856        0.484      0.169     0.250    0.194 
-LogisticRegression         0.792        0.330      0.542     0.410    0.480 
-SVC                        0.751        0.326      0.693     0.443    0.566 
+|Classifier             |   Accuracy    |   Precision  |    Recall   |     F1     |   F2   |
+|----------------------- | :----------: | :-----------: | :--------: | :-------: | :-------:|
+|GaussianNB               |  0.846    |    0.454   |   0.365   |  0.405  |  0.380 |
+|RandomForestClassifier    | 0.856    |    0.484    |  0.169   |  0.250  |  0.194 |
+|LogisticRegression         |0.792    |    0.330    |  0.542   |  0.410  |  0.480 |
+|SVC                       | 0.751    |    0.326    |  0.693   |  0.443  |  0.566 |
 
 ###<font color='#068EDB'>Thoughts on the Final Model and How I got there</font>
 I held out 20% of the data as test set and put 80% into training set. Since the classe of labels are unbalanced -- 18 poi and 126 non-poi after removing "TOTAL" and "THE TRAVEL AGENCY IN THE PARK", I used stratified sampling method `StratifiedShuffleSplit` to make sure there are both of the classes in the training and test set.  
@@ -150,13 +150,11 @@ lr_cla = Pipeline(steps=[
                                           random_state = 42, class_weight = 'auto'))
 ])
 ```
-
-
-LogisticRegression                     Accuracy    Precision    Recall     F1       F2   
-------------------------------------  ----------  -----------  --------  -------  -------
-Not tuned (lr_org)                      0.850        0.367      0.170     0.233    0.191 
-Tuned (lr_tn) [FINAL]                   0.789        0.325      0.541     0.406    0.477 
-Tuned w/ auto class_weight (lr_cla)     0.666        0.274      0.911     0.421    0.621 
+|           LogisticRegression      |   Accuracy    |   Precision  |    Recall   |     F1     |   F2   |
+|---------------------------------- | :----------: | :-----------: | :--------: | :-------: | :-------:|
+|Not tuned (lr_org)                 | 0.850       | 0.367   |   0.170  |   0.233 |   0.191 | 
+|Tuned (lr_tn) [FINAL]              | 0.789       | 0.325   |   0.541  |   0.406 |   0.477 |
+|Tuned w/ auto class_weight (lr_cla)|     0.666   |     0.274 |     0.911  |   0.421 |   0.621 |
 
 
 
