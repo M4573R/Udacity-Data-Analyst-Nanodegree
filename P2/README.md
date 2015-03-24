@@ -2,7 +2,7 @@
 
 [Click here](https://cdn.rawgit.com/lmf90409/Udacity-Data-Analyst-Nanodegree/master/P2/OpenStreetMap_Project_Data_Wrangling_with_MongoDB.html) to see the report.
 
- - Thoroughly audited and cleaned the dataset for validity, accuracy, completeness, consistency and uniformity.  
- - Converted it from XML to JSON format.   
- - Imported the clean JSON file into MongoDB database and run some queries against it.  
+ - Thoroughly audited and cleaned the dataset for validity, accuracy, completeness, consistency and uniformity in python.  
+ - Converted it from XML to JSON format in python.   
+ - Imported the clean JSON file into MongoDB database and run some queries in mongo shell.  
  - Listed interestings finds, such as the top contributors, most updated nodes, most popular cuisines in the city, most common postcodes etc.
