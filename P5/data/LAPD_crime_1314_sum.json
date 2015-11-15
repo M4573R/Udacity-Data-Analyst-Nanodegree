@@ -1,0 +1,547 @@
+[
+  {
+    "LAPA": "77th Street",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 5189
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 2085
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4753
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 2393
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Central",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 2900
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 816
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3115
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 1037
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Devonshire",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 4352    
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 313
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4317
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 424
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Foothill",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3308      
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 502
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 2898
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 587
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Harbor",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3910              
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 578
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3745
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 684
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Hollenbeck",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 2771             
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 689
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 2773
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 763
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Hollywood",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3643               
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 751
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3674
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 827
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Mission",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 4527               
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 750
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4179
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 745
+      }
+    ]
+  },
+
+  {
+    "LAPA": "North Hollywood",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 5372                  
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 547
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4996
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 588
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Newton",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3752
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 1141
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3690
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 1372
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Northeast",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 4237
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 562
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4357
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 744
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Olympic",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3066        
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 846
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3381
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 1019
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Pacific",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 5341
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 611
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 6141
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 573
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Rampart",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 2737
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 1072
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3094
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 1092
+      }
+    ]
+  },
+
+  {
+    "LAPA": "Southeast",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3713 
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 1426
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3711
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 1720
+      }
+    ]
+  },    
+
+  {
+    "LAPA": "Southwest",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 5277  
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 1438
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 5265
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 1587
+      }
+    ]
+  },    
+
+  {
+    "LAPA": "Topanga",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 4583   
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 391
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4340
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 500
+      }
+    ]
+  },    
+
+  {
+    "LAPA": "Van Nuys",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 4417           
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 430
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4146
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 563
+      }
+    ]
+  },    
+
+  {
+    "LAPA": "West LA",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 4347
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 312
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 4336
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 300
+      }
+    ]
+  },    
+
+  {
+    "LAPA": "West Valley",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3751
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 456
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3546
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 561
+      }
+    ]
+  },    
+
+  {
+    "LAPA": "Wilshire",
+    "values": [
+      {
+        "code": "Property'13",
+        "name": "Property Crime, 2013",
+        "value": 3852
+      },
+      {
+        "code": "Violent'13",
+        "name": "Violent Crime, 2013",
+        "value": 540
+      },
+      {
+        "code": "Property'14",
+        "name": "Property Crime, 2014",
+        "value": 3812
+      },
+      {
+        "code": "Violent'14",
+        "name": "Violent Crime, 2014",
+        "value": 609
+      }
+    ]
+  }
+]
