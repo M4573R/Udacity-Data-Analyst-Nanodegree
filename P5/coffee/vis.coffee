@@ -22,7 +22,7 @@ SmallMults = () ->
 
   # names will also be used to color the bars
   colorScale = d3.scale.ordinal()
-    .range(["#ff7f0e", "#1f77b4", "#2ca02c", "#d62728"]) 
+    .range(["#1f77b4", "#2ca02c", "#17becf", "#bcbd22"]) 
 
   # yPadding is removed to make room for country names
   yScale = d3.scale.linear()
