@@ -24,7 +24,7 @@ I wanted to focus my analysis only on violent and property crimes, while they ta
 
 ## Feedback 
 
-I gathered three feedbacks from my coworkers and updated my small multiple (bar) chart accorddingly. You can see the before and after screenshots in 'image' file.
+I gathered three feedbacks from my coworkers and updated my small multiple (bar) chart accorddingly. You can see the before and after screenshots in 'img' file.
 
 From L: Put in a link of the news story you just show me! It'll lead your audience understand the background of the data visualization and conclude their own story better and easier.
 
