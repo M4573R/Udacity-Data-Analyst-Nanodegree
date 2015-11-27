@@ -1,9 +1,10 @@
 ## Summary
 
-Taking advantage of Los Angeles open data, I took a deep dive analysis on the Los Angeles's violent crime rising in 2014 news report.  
+In the visualization, readers can get a quick sense of where their neighboorhood of interest stands in terms of how many crimes happened in 2014 (most recent year). If they want to learn more details, they can get the real numbers of each category and the year-over-year percentage change when they click on a small block.  
 
-While the overall number of violent crime rises in 2014 and so do the majority of districts, West LA, Pacific and Mission witness a drop in the number of violent crime in 2014 comparing with 2013.  
-And despite of the overall fall in the number of property violent crime in 2014, property crime increases by 15% in Pacific District.  
+Overall, 77th Street, Southwest, Pacific got the most violent and property crimes and West Valley, Hollenbeck and Foothill got the lowest numbers.  
+
+The basic idea of using small multiples here is not to overwhelm the readers with all the information from all the regions together. Bur rather give them a high level information (ranking) first and encourage them to explore more about the region of their interest (numbers only shown when zoom in a chart).
 
 
 ## Background Story

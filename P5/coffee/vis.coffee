@@ -22,7 +22,7 @@ SmallMults = () ->
 
   # names will also be used to color the bars
   colorScale = d3.scale.ordinal()
-    .range(["#1f77b4", "#2ca02c", "#17becf", "#bcbd22"]) 
+    .range(["#1f77b4", "#2ca02c", "#17becf",  "#bcbd22"]) 
 
   # yPadding is removed to make room for country names
   yScale = d3.scale.linear()
@@ -144,6 +144,7 @@ SmallMults = () ->
     # switch the css on which divs are hidden
     toggleHidden(true)
     
+
     detailView = d3.select("#detail_view")
 
     # clear any existing detail view
@@ -216,6 +217,16 @@ SmallMults = () ->
     graph = d3.select("#detail_view .main")
     graph.selectAll(".subtitle").remove()
 
+    graph.selectAll(".subtitle")
+      .data([d]).enter()
+      .append("text")
+      .text("#{formatNumber(d.pct_chng * 100)}% change over 2013")
+      .attr("class", "subtitle")
+      .attr("fill", (d) -> colorScale(d.name))
+      .attr("text-anchor", "middle")
+      .attr("dy", "3.8em")
+      .attr("x", (d) -> graphWidth / 2)
+      .attr("font-size", 8)
 
   # ---
   # remove subtitle
@@ -233,7 +244,7 @@ SmallMults = () ->
     yMax = d3.max(data, (d) -> d3.max(d.values, (e) -> e.value))
     # this scale is expanded past its max to provide some white space
     # on the top of the bars
-    yScale.domain([0,yMax + 2000])
+    yScale.domain([0,yMax + 2500])
 
     names = data[0].values.map (d) -> d.name
     xScale.domain(names)
